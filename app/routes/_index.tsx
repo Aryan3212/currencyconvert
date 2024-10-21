@@ -1,12 +1,36 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { AlertCircle } from "lucide-react";
+import { MetaFunction } from "@remix-run/node";
 import CurrencyConverter from "~/components/CurrencyConverter";
-import { Alert, AlertTitle } from "~/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { countryMaps } from "~/lib/constants";
 import { Currency } from "~/lib/types";
 import { Redis } from "@upstash/redis";
+import type { LinksFunction } from "@remix-run/node";
+
+export const links: LinksFunction = () => {
+  return [
+    {
+      rel: "icon",
+      href: "/favicon.png",
+      type: "image/png",
+    },
+  ];
+};
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Multiple Currency Converter" },
+    {
+      property: "og:title",
+      content: "A multiple currency converter",
+    },
+    {
+      name: "description",
+      content: "Easily convert multiple foreign exchange currency.",
+    },
+  ];
+};
 
 type CurrencyCode = keyof typeof countryMaps;
 export type FixerResponse = {

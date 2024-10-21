@@ -1,15 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Minus, ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, XIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
 import {
   Command,
   CommandEmpty,
@@ -100,7 +94,7 @@ export default function CurrencyConverter({
                 {currency.code}
               </span>
             </div>
-            <p className="basis-[50%]">{currency.name}</p>
+            <p className="basis-[25%]">{currency.name}</p>
             <Input
               value={currency.displayValue}
               onChange={(e) => handleValueChange(index, e.target.value)}
@@ -114,7 +108,7 @@ export default function CurrencyConverter({
               onClick={() => removeCurrency(index)}
               aria-label={`Remove ${currency.name}`}
             >
-              <Minus className="h-4 w-4" />
+              <XIcon className="h-4 w-4" />
             </Button>
           </div>
           {currency.error && (
