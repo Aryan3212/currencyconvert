@@ -21,14 +21,16 @@ export const links: LinksFunction = () => {
 export const meta: MetaFunction = () => {
   return [
     { title: "Multiple Currency Converter" },
-    {
-      property: "og:title",
-      content: "A multiple currency converter",
-    },
-    {
-      name: "description",
-      content: "Easily convert multiple foreign exchange currency.",
-    },
+    { name: "description", content: "Convert between multiple currencies with our easy-to-use, real-time currency converter. Get estimated exchange rates for USD, EUR, GBP, JPY, and more." },
+    { name: "keywords", content: "currency converter, exchange rates, USD, EUR, GBP, JPY, THB" },
+    { property: "og:title", content: "Multiple Currency Converter" },
+    { property: "og:description", content: "Convert between multiple currencies with our easy-to-use, real-time currency converter. Get estimated exchange rates for USD, EUR, GBP, JPY, and more." },
+    { property: "og:type", content: "website" },
+    { property: "og:image", content: "/favicon.png" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: "Multiple Currency Converter" },
+    { name: "twitter:description", content: "Convert between multiple currencies with our easy-to-use, real-time currency converter. Get estimated exchange rates for USD, EUR, GBP, JPY, and more." },
+    { name: "twitter:image", content: "/favicon.jpg" },
   ];
 };
 
@@ -241,62 +243,37 @@ export const loader: LoaderFunction = async () => {
   return json(currencyList);
 };
 
-export function parseCurrencies(apiResponse: FixerResponse): Currency[] {
-  const result: Currency[] = [];
+export function parseCurrencies(apiResponse: FixerResponse): Currency {
+  const result: any = {};
   const baseValue = apiResponse.rates[apiResponse.base] || 1;
-
+  console.log({ baseValue })
   for (const [code, rate] of Object.entries(apiResponse.rates)) {
     const mapEntry = countryMaps[code as CurrencyCode];
     if (mapEntry) {
       const value = rate / baseValue;
-      result.push({
-        code,
+      result[code] = {
         name: mapEntry.name,
         flag: mapEntry.flag,
+        code: code,
         value,
-        displayValue: value.toFixed(2),
-        error: false,
-      });
+      };
     }
   }
 
-  // Add the base currency if it's not already in the list
-  if (!result.find((currency) => currency.code === apiResponse.base)) {
-    const baseEntry = countryMaps[apiResponse.base];
-    if (baseEntry) {
-      result.push({
-        code: apiResponse.base,
-        name: baseEntry.name,
-        flag: baseEntry.flag,
-        value: 1,
-        displayValue: "1.00",
-        error: false,
-      });
-    }
-  }
-
-  return result;
+  return result as Currency;
 }
 export default function index() {
   const currencyList = useLoaderData<FixerResponse>();
 
   return (
-    <Card className="w-[98%] max-w-[72rem] mx-auto mt-4">
+    <Card className="w-[98%] max-w-[52rem] mx-auto mt-4">
       <CardHeader>
-        <CardTitle className="mx-auto text-4xl">
+        <CardTitle className="text-4xl">
           Multiple Currency Converter
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <CurrencyConverter currencyList={parseCurrencies(currencyList)} />
-
-        {/* <Alert className="mt-4"> */}
-        {/*   <AlertCircle className="h-4 w-4" /> */}
-        {/*   <AlertTitle> */}
-        {/*     Exchange rates last updated at{" "} */}
-        {/*     {new Date(currencyList.timestamp).toISOString()} */}
-        {/*   </AlertTitle> */}
-        {/* </Alert> */}
+        <CurrencyConverter currencyMap={parseCurrencies(currencyList)} />
       </CardContent>
     </Card>
   );

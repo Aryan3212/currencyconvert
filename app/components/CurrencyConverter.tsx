@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronsUpDown, XIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, TextQuote, XIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import {
   Command,
   CommandEmpty,
@@ -19,61 +18,81 @@ import {
 import { Alert, AlertTitle } from "~/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { numberValidator } from "~/lib/validate";
-import { Fragment } from "react";
 import { Currency } from "~/lib/types";
-
+type ValueType = Currency[keyof Currency];
+type CurrencyState = ValueType & {
+  displayValue: string;
+  error: boolean;
+}
 export default function CurrencyConverter({
-  currencyList,
+  currencyMap,
 }: {
-  currencyList: Currency[];
+  currencyMap: Currency;
 }) {
-  const usd = currencyList.find((c) => c.code === "USD") as Currency;
-  const thb = currencyList.find((c) => c.code === "THB") as Currency;
-  const eur = currencyList.find((c) => c.code === "EUR") as Currency;
-  const [currencies, setCurrencies] = useState<Currency[]>([
-    { ...usd },
-    { ...eur },
-    { ...thb },
+  const usd = currencyMap["USD"];
+  const thb = currencyMap["THB"];
+  const eur = currencyMap["EUR"];
+
+  const [currencies, setCurrencies] = useState<CurrencyState[]>([
+    { ...usd,
+      displayValue: usd.value.toFixed(2).toString(),
+      error: false,
+    },
+    { ...eur,
+      displayValue: eur.value.toFixed(2).toString(),
+        error: false,
+     },
+    { ...thb,
+      displayValue: thb.value.toFixed(2).toString(),
+        error: false,
+     },
   ]);
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    // if (window.localStorage.getItem('savedCurrencyList')) {
 
+    // }
+  }, [])
   const handleValueChange = (index: number, newValue: string) => {
     const validationResult = numberValidator.safeParse(newValue);
-    const newCurrencies = currencies.map((currency, i) => {
-      if (i === index) {
-        return {
+    const changedCurrency = currencies[index]; // initial
+    if (validationResult.success) {
+      const changePercentage = (validationResult.data - changedCurrency.value) / changedCurrency.value; // -0.1%
+      Object.entries(currencyMap).forEach((currencyObjPair) => {
+        const changedValue = currencyMap[currencyObjPair[1].code].value + currencyMap[currencyObjPair[1].code].value * changePercentage
+        currencyMap[currencyObjPair[1].code].value = changedValue
+      })
+      currencies.forEach((currency, currencyIndex, array) => {
+        array[currencyIndex] = {
           ...currency,
-          ...(validationResult.success && { value: validationResult.data }),
-          displayValue: newValue,
-          error: !validationResult.success,
-        };
-      } else {
-        const value =
-          validationResult.success &&
-          (validationResult.data / (currencies[index].value as number)) *
-            (currency.value as number);
-
-        return {
-          ...currency,
-          ...(value && {
-            value: value,
-            displayValue: value.toString(),
-            error: false,
-          }),
-        };
-      }
-    });
-    setCurrencies(newCurrencies);
+          ...currencyMap[currency.code],
+          error: false,
+        }
+        if (currencyIndex === index) {
+          array[currencyIndex].displayValue = newValue
+        } else {
+          array[currencyIndex].displayValue = currencyMap[currency.code].value.toFixed(2).toString()
+        }
+      });  
+    } else {
+      currencies[index].error = true
+      currencies[index].displayValue = newValue
+    }
+  setCurrencies([...currencies]);
   };
 
-  const addCurrency = (currency: Currency) => {
-    if (!currencies.some((c) => c.code === currency.code)) {
-      const baseValue = currencies[0]?.value || 1;
-      setCurrencies([
-        ...currencies,
-        { ...currency, value: baseValue * currency.value },
-      ]);
-    }
+  const addCurrency = (currency: Currency[string]) => {
+    setCurrencies([
+      ...currencies,
+      {
+        value: currency.value,
+        name: currency.name,
+        flag: currency.flag,
+        code: currency.code,
+        displayValue: currency.value.toFixed(2).toString(),
+        error: false
+      },
+    ]);
     setOpen(false);
   };
 
@@ -84,72 +103,72 @@ export default function CurrencyConverter({
   return (
     <div className="space-y-4">
       {currencies.map((currency, index) => (
-        <Fragment key={index}>
-          <div className="flex items-center space-x-2">
-            <div className="flex justify-between items-center basis-[10%]">
-              <span className="text-3xl" aria-hidden="true">
-                {currency.flag}
-              </span>
-              <span className="font-bold w-12" aria-label={currency.name}>
-                {currency.code}
-              </span>
-            </div>
-            <p className="basis-[25%]">{currency.name}</p>
-            <Input
-              value={currency.displayValue}
-              onChange={(e) => handleValueChange(index, e.target.value)}
-              className="min-w-24 flex-grow-[auto] text-xl"
-              aria-label={`Amount in ${currency.name}`}
-            />
-            <Button
-              variant="outline"
-              size="icon"
-              className="flex-basis-[10%] flex-basis-0 flex-shrink-0 text-xl"
-              onClick={() => removeCurrency(index)}
-              aria-label={`Remove ${currency.name}`}
-            >
-              <XIcon className="h-4 w-4" />
-            </Button>
-          </div>
-          {currency.error && (
-            <Alert variant="destructive">
+         <div key={index} className="relative">
+         <div className="flex items-center space-x-2 mb-1">
+           <span className="text-2xl" aria-hidden="true">
+             {currency.flag}
+           </span>
+           <span className="font-bold" aria-label={currency.name}>
+             {currency.code}
+           </span>
+           <span className="text-sm text-muted-foreground">
+             {currency.name}
+           </span>
+         </div>
+         <input
+           value={currency.displayValue}
+           onChange={(e) => handleValueChange(index, e.target.value)}
+           className="w-full text-3xl font-medium bg-transparent border-b border-input focus:outline-none focus:border-primary transition-colors"
+           aria-label={`Amount in ${currency.name}`}
+         />
+         <Button
+           variant="ghost"
+           size="icon"
+           onClick={() => removeCurrency(index)}
+           className="absolute right-0 top-8 text-muted-foreground hover:text-foreground hover:bg-red-100 hover:text-red-500"
+           aria-label={`Remove ${currency.name}`}
+         >
+           <XIcon className="h-6 w-6" aria-label="Remove Currency" />
+         </Button>
+         {currency.error && (
+            <Alert variant="destructive" className="mt-2">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>
                 Error: Please input a proper number greater than 0.
               </AlertTitle>
             </Alert>
           )}
-        </Fragment>
+         </div>
       ))}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between text-xl"
-          >
-            Add Currency
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-start text-white hover:text-white bg-primary hover:bg-primary/90 text-lg py-6"
+        >
+          <Plus className="mr-2 h-5 w-5" />
+          Add Currency
+        </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full p-0 text-xl">
           <Command className="text-xl min-w-64">
             <CommandInput placeholder="Search currency..." />
             <CommandEmpty>No currency found.</CommandEmpty>
             <CommandList>
-              {currencyList
-                .filter((c) => !currencies.some((curr) => curr.code === c.code))
+              {Object.entries(currencyMap)
+                .filter((c) => !currencies.some((curr) => curr.code === c[0]))
                 .map((currency) => (
                   <CommandItem
-                    key={currency.code}
-                    onSelect={() => addCurrency(currency)}
+                    key={currency[1].name}
+                    onSelect={() => addCurrency(currency[1])}
                     className="text-xl"
                   >
                     <span className="mr-2" aria-hidden="true">
-                      {currency.flag}
+                      {currency[1].flag}
                     </span>
-                    {currency.name} ({currency.code})
+                    {currency[1].name} ({currency[1].code})
                   </CommandItem>
                 ))}
             </CommandList>

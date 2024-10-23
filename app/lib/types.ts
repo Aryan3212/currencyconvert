@@ -1,8 +1,8 @@
 export type Currency = {
-  code: string;
-  name: string;
-  flag: string;
-  value: number;
-  displayValue: string;
-  error: boolean;
+  [key: string]: {
+    name: string;
+    flag: string;
+    code: string;
+    value: number;
+  }
 };
