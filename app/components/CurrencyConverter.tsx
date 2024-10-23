@@ -126,7 +126,6 @@ export default function CurrencyConverter({
     ]
     setCurrencies(addedCurrencyList);
     window.localStorage.setItem('savedCurrencyList', JSON.stringify(addedCurrencyList))
-    window.localStorage.setItem('anchor', JSON.stringify(anchor > currencies.length - 2 ? anchor : 0));
     setOpen(false);
   };
 
@@ -134,6 +133,7 @@ export default function CurrencyConverter({
     const filteredCurrencies = currencies.filter((_, i) => i !== index)
     setCurrencies(filteredCurrencies);
     window.localStorage.setItem('savedCurrencyList', JSON.stringify(filteredCurrencies))
+    window.localStorage.setItem('anchor', JSON.stringify(anchor > currencies.length - 2 ? anchor : 0))
   };
 
   return (
