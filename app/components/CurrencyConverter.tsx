@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, TextQuote, XIcon } from "lucide-react";
+import { Plus, XIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Command,
@@ -32,6 +32,7 @@ export default function CurrencyConverter({
   const usd = currencyMap["USD"];
   const thb = currencyMap["THB"];
   const eur = currencyMap["EUR"];
+  let anchor = 0;
 
   const [currencies, setCurrencies] = useState<CurrencyState[]>([
     { ...usd,
@@ -49,9 +50,35 @@ export default function CurrencyConverter({
   ]);
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    // if (window.localStorage.getItem('savedCurrencyList')) {
-
-    // }
+    // TODO: Should add schema validation
+    const savedCurrencyList = window.localStorage.getItem('savedCurrencyList')
+    if (savedCurrencyList) {
+      const savedListObj = JSON.parse(savedCurrencyList) as CurrencyState[]
+      if (savedListObj.length > 0) {
+        const anchorCurrencyLocal = window.localStorage.getItem('anchor');
+        let anchor;
+        if (anchorCurrencyLocal) {
+          anchor = JSON.parse(anchorCurrencyLocal)
+        } else {
+          anchor = savedListObj[0]?.code
+        }
+        const anchorCurrency = savedListObj[anchor]
+        const changePercentage = (anchorCurrency.value - currencyMap[savedListObj[anchor].code].value) / currencyMap[savedListObj[anchor].code].value; // -0.1%
+        Object.entries(currencyMap).forEach((currencyObjPair) => {
+        const changedValue = currencyMap[currencyObjPair[1].code].value + currencyMap[currencyObjPair[1].code].value * changePercentage
+          currencyMap[currencyObjPair[1].code].value = changedValue
+        })
+        savedListObj.forEach((currency, currencyIndex, array) => {
+          array[currencyIndex] = {
+            ...currency,
+            ...currencyMap[currency.code],
+            displayValue: currencyMap[currency.code].value.toFixed(2).toString(),
+            error: false,
+          }
+        });  
+        setCurrencies(savedListObj)
+      }
+    }
   }, [])
   const handleValueChange = (index: number, newValue: string) => {
     const validationResult = numberValidator.safeParse(newValue);
@@ -78,11 +105,15 @@ export default function CurrencyConverter({
       currencies[index].error = true
       currencies[index].displayValue = newValue
     }
-  setCurrencies([...currencies]);
+    const updatedCurrencyList = [...currencies];
+  setCurrencies(updatedCurrencyList);
+  window.localStorage.setItem('savedCurrencyList', JSON.stringify(updatedCurrencyList));
+  anchor = index;
+  window.localStorage.setItem('anchor', JSON.stringify(index));
   };
 
   const addCurrency = (currency: Currency[string]) => {
-    setCurrencies([
+    const addedCurrencyList = [
       ...currencies,
       {
         value: currency.value,
@@ -92,12 +123,17 @@ export default function CurrencyConverter({
         displayValue: currency.value.toFixed(2).toString(),
         error: false
       },
-    ]);
+    ]
+    setCurrencies(addedCurrencyList);
+    window.localStorage.setItem('savedCurrencyList', JSON.stringify(addedCurrencyList))
+    window.localStorage.setItem('anchor', JSON.stringify(anchor > currencies.length - 2 ? anchor : 0));
     setOpen(false);
   };
 
   const removeCurrency = (index: number) => {
-    setCurrencies(currencies.filter((_, i) => i !== index));
+    const filteredCurrencies = currencies.filter((_, i) => i !== index)
+    setCurrencies(filteredCurrencies);
+    window.localStorage.setItem('savedCurrencyList', JSON.stringify(filteredCurrencies))
   };
 
   return (
