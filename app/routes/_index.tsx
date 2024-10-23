@@ -2,7 +2,7 @@ import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
 import CurrencyConverter from "~/components/CurrencyConverter";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { countryMaps } from "~/lib/constants";
 import { Currency } from "~/lib/types";
 import { Redis } from "@upstash/redis";
@@ -17,6 +17,15 @@ export const links: LinksFunction = () => {
     },
   ];
 };
+
+const formatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  timeZoneName: 'short'
+});
 
 export const meta: MetaFunction = () => {
   return [
@@ -275,6 +284,9 @@ export default function index() {
       <CardContent>
         <CurrencyConverter currencyMap={parseCurrencies(currencyList)} />
       </CardContent>
+      <CardFooter>
+        <p>Exchange rates last updated at {formatter.format(new Date(currencyList.timestamp * 1000))}</p>
+      </CardFooter>
     </Card>
   );
 }
