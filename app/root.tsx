@@ -33,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2360156394549010"
-     crossOrigin="anonymous" />
+     crossOrigin="anonymous"></script>
       </head>
       <body>
         {children}
