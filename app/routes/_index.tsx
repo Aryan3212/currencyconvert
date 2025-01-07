@@ -2,7 +2,13 @@ import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
 import CurrencyConverter from "~/components/CurrencyConverter";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { countryMaps } from "~/lib/constants";
 import { Currency } from "~/lib/types";
 import { Redis } from "@upstash/redis";
@@ -18,28 +24,91 @@ export const links: LinksFunction = () => {
   ];
 };
 
-const formatter = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  timeZoneName: 'short'
+const formatter = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  timeZoneName: "short",
 });
 
 export const meta: MetaFunction = () => {
+  const title =
+    "Currency Converter Pro | Multi-Currency Travel Calculator with Offline Storage";
+  const description =
+    "Best free and simple travel-friendly currency converter with offline storage. Convert USD, EUR, GBP, JPY & 150+ currencies instantly. Save calculations for quick access while traveling. Real-time exchange rates, completely free.";
+  const keywords =
+    "currency converter, travel calculator, offline currency converter, exchange rates, USD, EUR, GBP, JPY, THB, saved calculations, travel tools, currency calculator, multiple currency conversion";
+  const canonicalUrl = "https://www.currencyconverterpro.com"; // Replace with your actual domain
+
   return [
-    { title: "Multiple Currency Converter" },
-    { name: "description", content: "Convert between multiple currencies with our easy-to-use, real-time currency converter. Get estimated exchange rates for USD, EUR, GBP, JPY, and more." },
-    { name: "keywords", content: "currency converter, exchange rates, USD, EUR, GBP, JPY, THB" },
-    { property: "og:title", content: "Multiple Currency Converter" },
-    { property: "og:description", content: "Convert between multiple currencies with our easy-to-use, real-time currency converter. Get estimated exchange rates for USD, EUR, GBP, JPY, and more." },
+    // Basic Meta Tags
+    { title },
+    { name: "description", content: description },
+    { name: "keywords", content: keywords },
+    { name: "robots", content: "index, follow" },
+    { rel: "canonical", href: canonicalUrl },
+
+    // Open Graph Tags
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
     { property: "og:type", content: "website" },
-    { property: "og:image", content: "/favicon.png" },
+    { property: "og:url", content: canonicalUrl },
+    {
+      property: "og:image",
+      content: `${canonicalUrl}/currency-converter-pro-1200x630.png`,
+    },
+    {
+      property: "og:image:alt",
+      content:
+        "Currency Converter Pro interface showing multiple currency conversion",
+    },
+    { property: "og:site_name", content: "Currency Converter Pro" },
+    { property: "og:locale", content: "en_US" },
+
+    // Twitter Card Tags
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "Multiple Currency Converter" },
-    { name: "twitter:description", content: "Convert between multiple currencies with our easy-to-use, real-time currency converter. Get estimated exchange rates for USD, EUR, GBP, JPY, and more." },
-    { name: "twitter:image", content: "/favicon.jpg" },
+    { name: "twitter:title", content: title },
+    { name: "twitter:description", content: description },
+    {
+      name: "twitter:image",
+      content: `${canonicalUrl}/currency-converter-pro-1200x630.png`,
+    },
+    {
+      name: "twitter:image:alt",
+      content:
+        "Currency Converter Pro interface showing multiple currency conversion",
+    },
+
+    // Additional SEO Tags
+    { name: "application-name", content: "Currency Converter Pro" },
+    { name: "apple-mobile-web-app-title", content: "Currency Converter Pro" },
+    { name: "theme-color", content: "#FFFFFF" }, // Replace with your brand color
+
+    // Schema.org JSON-LD
+    {
+      "script:ld+json": {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        name: "Currency Converter Pro",
+        description: description,
+        url: canonicalUrl,
+        applicationCategory: "FinanceApplication",
+        operatingSystem: "All",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+        },
+        featureList: [
+          "Multiple currency conversion",
+          "Offline storage for saved calculations",
+          "Travel-friendly interface",
+          "Real-time exchange rates",
+        ],
+      },
+    },
   ];
 };
 
@@ -255,7 +324,7 @@ export const loader: LoaderFunction = async () => {
 export function parseCurrencies(apiResponse: FixerResponse): Currency {
   const result: any = {};
   const baseValue = apiResponse.rates[apiResponse.base] || 1;
-  console.log({ baseValue })
+  console.log({ baseValue });
   for (const [code, rate] of Object.entries(apiResponse.rates)) {
     const mapEntry = countryMaps[code as CurrencyCode];
     if (mapEntry) {
@@ -277,15 +346,16 @@ export default function index() {
   return (
     <Card className="w-[98%] max-w-[52rem] mx-auto mt-4">
       <CardHeader>
-        <CardTitle className="text-4xl">
-          Multiple Currency Converter
-        </CardTitle>
+        <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
       </CardHeader>
       <CardContent>
         <CurrencyConverter currencyMap={parseCurrencies(currencyList)} />
       </CardContent>
       <CardFooter>
-        <p>Exchange rates last updated at {formatter.format(new Date(currencyList.timestamp * 1000))}</p>
+        <p>
+          Exchange rates last updated at{" "}
+          {formatter.format(new Date(currencyList.timestamp * 1000))}
+        </p>
       </CardFooter>
     </Card>
   );
