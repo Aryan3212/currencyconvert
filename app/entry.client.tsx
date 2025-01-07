@@ -5,7 +5,7 @@ import posthog from "posthog-js";
 
 function PosthogInit() {
   useEffect(() => {
-    posthog.init("phc_fv22mw84lEexQPf50Ae8NyHEsaqSa8xYBruNyTlij31", {
+    posthog.init("phc_gH83fO4UP1oXvxpB9WyO6g7NOG1xpkwQm4BBQAGrRBi", {
       api_host: "https://us.i.posthog.com",
       person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
     });
