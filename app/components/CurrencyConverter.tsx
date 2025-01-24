@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, XIcon } from "lucide-react";
+import { LoaderCircle } from 'lucide-react';
 import { Button } from "~/components/ui/button";
 import {
   Command,
@@ -49,35 +50,40 @@ export default function CurrencyConverter({
      },
   ]);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    // TODO: Should add schema validation
-    const savedCurrencyList = window.localStorage.getItem('savedCurrencyList')
-    if (savedCurrencyList) {
+    try {
+      const savedCurrencyList = window.localStorage.getItem('savedCurrencyList')
+      if (!savedCurrencyList) return;
+
       const savedListObj = JSON.parse(savedCurrencyList) as CurrencyState[]
-      if (savedListObj.length > 0) {
-        const anchorCurrencyLocal = window.localStorage.getItem('anchor');
-        let anchor;
-        if (anchorCurrencyLocal) {
-          anchor = JSON.parse(anchorCurrencyLocal)
-        } else {
-          anchor = savedListObj[0]?.code
-        }
-        const anchorCurrency = savedListObj[anchor]
-        const changePercentage = (anchorCurrency.value - currencyMap[savedListObj[anchor].code].value) / currencyMap[savedListObj[anchor].code].value; // -0.1%
-        Object.entries(currencyMap).forEach((currencyObjPair) => {
-        const changedValue = currencyMap[currencyObjPair[1].code].value + currencyMap[currencyObjPair[1].code].value * changePercentage
-          currencyMap[currencyObjPair[1].code].value = changedValue
-        })
-        savedListObj.forEach((currency, currencyIndex, array) => {
-          array[currencyIndex] = {
-            ...currency,
-            ...currencyMap[currency.code],
-            displayValue: currencyMap[currency.code].value.toFixed(2).toString(),
-            error: false,
-          }
-        });  
-        setCurrencies(savedListObj)
-      }
+      if (!Array.isArray(savedListObj) || savedListObj.length === 0) return;
+
+      const anchorCurrencyLocal = window.localStorage.getItem('anchor');
+      let anchor = anchorCurrencyLocal ? JSON.parse(anchorCurrencyLocal) : savedListObj[0]?.code;
+      
+      if (!anchor || !savedListObj[anchor] || !currencyMap[savedListObj[anchor].code]) return;
+
+      const anchorCurrency = savedListObj[anchor];
+      const changePercentage = (anchorCurrency.value - currencyMap[savedListObj[anchor].code].value) / currencyMap[savedListObj[anchor].code].value;
+
+      Object.entries(currencyMap).forEach((currencyObjPair) => {
+        const code = currencyObjPair[1].code;
+        const changedValue = currencyMap[code].value + currencyMap[code].value * changePercentage;
+        currencyMap[code].value = changedValue;
+      });
+
+      const updatedList = savedListObj.map(currency => ({
+        ...currency,
+        ...currencyMap[currency.code],
+        displayValue: currencyMap[currency.code].value.toFixed(2).toString(),
+        error: false,
+      }));
+
+      setCurrencies(updatedList);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading saved currencies:', error);
     }
   }, [])
   const handleValueChange = (index: number, newValue: string) => {
@@ -137,6 +143,11 @@ export default function CurrencyConverter({
   };
 
   return (
+    loading ? <div className="flex flex-col justify-center items-center h-[360px]">
+    <LoaderCircle className="animate-spin h-8 w-8" />
+    <h1 className="text-center text-sm text-slate-600">Loading saved state..</h1>
+    </div>
+    :
     <div className="space-y-4">
       {currencies.map((currency, index) => (
          <div key={index} className="relative">
