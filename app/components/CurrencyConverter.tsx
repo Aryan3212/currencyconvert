@@ -25,6 +25,10 @@ type CurrencyState = ValueType & {
   displayValue: string;
   error: boolean;
 };
+
+function isFalsy(item: unknown): boolean {
+  return item === null || item === undefined;
+}
 export default function CurrencyConverter({
   currencyMap,
 }: {
@@ -34,26 +38,26 @@ export default function CurrencyConverter({
   const thb = currencyMap["THB"];
   const eur = currencyMap["EUR"];
   let anchor = 0;
-
-  const [currencies, setCurrencies] = useState<CurrencyState[]>([
+  const defaultCurrencies = [
     { ...usd, displayValue: usd.value.toFixed(2).toString(), error: false },
     { ...eur, displayValue: eur.value.toFixed(2).toString(), error: false },
     { ...thb, displayValue: thb.value.toFixed(2).toString(), error: false },
-  ]);
+  ]
+  const [currencies, setCurrencies] = useState<CurrencyState[]>(defaultCurrencies);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   // Function to process localStorage and extract currency data
-  const processLocalStorageCurrencies = () => {
+  const processLocalStorageCurrencies = (): CurrencyState[] => {
     try {
       const savedCurrencyList =
         window.localStorage.getItem("savedCurrencyList");
       if (!savedCurrencyList) {
-        return null;
+        return [];
       }
 
       const savedListObj = JSON.parse(savedCurrencyList) as CurrencyState[];
       if (!Array.isArray(savedListObj) || savedListObj.length === 0) {
-        return null;
+        return [];
       }
 
       const anchorCurrencyLocal = window.localStorage.getItem("anchor");
@@ -62,11 +66,11 @@ export default function CurrencyConverter({
         : savedListObj[0]?.code;
 
       if (
-        !anchor ||
+        isFalsy(anchor) ||
         !savedListObj[anchor] ||
         !currencyMap[savedListObj[anchor].code]
       ) {
-        return null;
+        return [];
       }
 
       const anchorCurrency = savedListObj[anchor];
@@ -94,21 +98,18 @@ export default function CurrencyConverter({
       return updatedList;
     } catch (error) {
       console.error("Error loading saved currencies:", error);
-      return null;
+      return [];
     }
   };
 
   // In your component
   useEffect(() => {
-    // Process localStorage and get the result
     const processedCurrencies = processLocalStorageCurrencies();
 
-    // Update state if processed currencies exist
     if (processedCurrencies) {
       setCurrencies(processedCurrencies);
     }
 
-    // Always set loading to false after processing
     setLoading(false);
   }, []);
   const handleValueChange = (index: number, newValue: string) => {
@@ -117,7 +118,7 @@ export default function CurrencyConverter({
     if (validationResult.success) {
       const changePercentage =
         (validationResult.data - changedCurrency.value) / changedCurrency.value; // -0.1%
-      Object.entries(currencyMap).forEach((currencyObjPair) => {
+      Object.entries(currencyMap).forEach((currencyObjPair: [string, ValueType]) => {
         const changedValue =
           currencyMap[currencyObjPair[1].code].value +
           currencyMap[currencyObjPair[1].code].value * changePercentage;
