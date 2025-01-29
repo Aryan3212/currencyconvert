@@ -31,8 +31,10 @@ function isFalsy(item: unknown): boolean {
 }
 export default function CurrencyConverter({
   currencyMap,
+  convertList = []
 }: {
   currencyMap: Currency;
+  convertList: string[];
 }) {
   const usd = currencyMap["USD"];
   const thb = currencyMap["THB"];
@@ -104,14 +106,27 @@ export default function CurrencyConverter({
 
   // In your component
   useEffect(() => {
-    const processedCurrencies = processLocalStorageCurrencies();
-
-    if (processedCurrencies) {
-      setCurrencies(processedCurrencies);
+    if (convertList.length > 1){
+      const convertCurrencies = convertList.map((code) => ({
+        ...currencyMap[code],
+        displayValue: currencyMap[code].value.toFixed(2).toString(),
+        error: false
+      }));
+      setCurrencies(convertCurrencies);
+      window.localStorage.setItem(
+        "savedCurrencyList", 
+        JSON.stringify(convertCurrencies)
+      );
+      window.localStorage.setItem("anchor", JSON.stringify(0));
+    } else {
+      const processedCurrencies = processLocalStorageCurrencies();
+      if (processedCurrencies) {
+        setCurrencies(processedCurrencies);
+      }
     }
 
     setLoading(false);
-  }, []);
+  }, [convertList]);
   const handleValueChange = (index: number, newValue: string) => {
     const validationResult = numberValidator.safeParse(newValue);
     const changedCurrency = currencies[index]; // initial

@@ -1,5 +1,5 @@
 import { json, LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, useParams, useSearchParams } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
 import CurrencyConverter from "~/components/CurrencyConverter";
 import {
@@ -13,6 +13,8 @@ import { countryMaps } from "~/lib/constants";
 import { Currency } from "~/lib/types";
 import { Redis } from "@upstash/redis";
 import type { LinksFunction } from "@remix-run/node";
+import { TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { Tooltip, TooltipContent } from "~/components/ui/tooltip";
 
 export const links: LinksFunction = () => {
   return [
@@ -33,7 +35,7 @@ const formatter = new Intl.DateTimeFormat("en-US", {
   timeZoneName: "short",
 });
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction = ({ params }) => {
   const title =
     "Currency Converter Pro | Multi-Currency Travel Calculator with Offline Storage";
   const description =
@@ -324,7 +326,7 @@ export const loader: LoaderFunction = async () => {
 export function parseCurrencies(apiResponse: FixerResponse): Currency {
   const result: any = {};
   const baseValue = apiResponse.rates[apiResponse.base] || 1;
-  console.log({ baseValue });
+
   for (const [code, rate] of Object.entries(apiResponse.rates)) {
     const mapEntry = countryMaps[code as CurrencyCode];
     if (mapEntry) {
@@ -340,16 +342,73 @@ export function parseCurrencies(apiResponse: FixerResponse): Currency {
 
   return result as Currency;
 }
+const popularCurrencies = [
+  { code: "EUR", name: "Euro" },             // France
+  { code: "USD", name: "US Dollar" },        // United States
+  { code: "GBP", name: "British Pound" },    // United Kingdom
+  { code: "CAD", name: "Canadian Dollar" },  // Canada
+  { code: "TRY", name: "Turkish Lira" },     // Turkey
+  { code: "THB", name: "Thai Baht" },        // Thailand
+  { code: "MXN", name: "Mexican Peso" },     // Mexico
+  { code: "MYR", name: "Malaysian Ringgit" }, // Malaysia
+  { code: "SAR", name: "Saudi Riyal" },      // Saudi Arabia
+  { code: "INR", name: "Indian Rupee" },     // India
+  { code: "CNY", name: "Chinese Yuan" },     // China
+  { code: "BRL", name: "Brazilian Real" },   // Brazil
+  { code: "AED", name: "UAE Dirham" },       // United Arab Emirates
+];
+
+function generateCurrencyPairs() {
+  const currencyCodes = popularCurrencies.map(c => c.code);
+  const pairs = [];
+  
+  // Generate all possible combinations
+  for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < currencyCodes.length; j++) {
+          if (i !== j) { // Avoid pairing a currency with itself
+              pairs.push([currencyCodes[i], currencyCodes[j]]);
+          }
+      }
+  }
+  
+  return pairs;
+}
+const popularPairs = generateCurrencyPairs();
+
+
 export default function index() {
   const currencyList = useLoaderData<FixerResponse>();
+  const params = useParams();
+  const validateCurrencyParams = (path: string | undefined, rates: FixerResponse['rates']): string[] => {
 
-  return (
+    if (!path) return [];
+    const currencies = path.split('-to-').map(c => c.toUpperCase());
+    
+
+    if (currencies.length < 2) return [];
+    
+
+    const validCurrencies = currencies.every(code => code in rates);
+    
+    return validCurrencies ? currencies : [];
+  };
+
+  const validatedCurrencies = validateCurrencyParams(params.path, currencyList.rates);
+
+  const footerLinks = [
+    { href: "/about", text: "About" },
+    { href: "/contact", text: "Contact" },
+    { href: "/terms-of-service", text: "Terms of Service" },
+    { href: "/privacy-policy", text: "Privacy Policy" }
+  ];
+
+  return (<>
     <Card className="w-[98%] max-w-[52rem] mx-auto mt-4">
       <CardHeader>
         <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
       </CardHeader>
       <CardContent>
-        <CurrencyConverter currencyMap={parseCurrencies(currencyList)} />
+        <CurrencyConverter currencyMap={parseCurrencies(currencyList)} convertList={validatedCurrencies}/>
       </CardContent>
       <CardFooter>
         <p>
@@ -358,5 +417,50 @@ export default function index() {
         </p>
       </CardFooter>
     </Card>
+    <div className="w-[98%] max-w-[52rem] mx-auto mt-8 mb-8">
+      <h2 className="text-2xl font-semibold mb-4">Popular Currency Conversions</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {popularPairs.map((countries) => (
+            <Card key={`${countries[0]}-${countries[1]}`} className="hover:bg-slate-50">
+              <Link to={`/${countries[0]}-to-${countries[1]}`} className="block p-4">
+              <TooltipProvider>
+                <Tooltip>
+                <TooltipContent>
+                  {countryMaps[countries[0]].name} to {countryMaps[countries[1]].name}
+                </TooltipContent>
+                  <TooltipTrigger className="flex items-center justify-between w-full">
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{countryMaps[countries[0]].flag}</span>
+                    <span>{countries[0]}</span>
+                  </div>
+                  <span>→</span>
+                  <div className="flex items-center gap-2">
+                    <span>{countries[1]}</span>
+                    <span className="text-xl">{countryMaps[countries[1]].flag}</span>
+                  </div>
+
+                </TooltipTrigger>
+                </Tooltip>
+                </TooltipProvider>
+              </Link>
+            </Card>
+          )
+        )}
+      </div>
+    </div>
+    <div className="w-full bg-gray-100 p-4 mt-8">
+          <h2 className="text-lg font-semibold mb-2 text-center">Useful Links</h2>
+      {footerLinks.map((link) => (
+          <div className="flex align-center gap-4">
+                <Link to={link.href} className="block p-4">
+                  <div className="flex items-center justify-center">
+                    <span>{link.text}</span>
+                  </div>
+                </Link>
+          </div>
+      ))}
+      </div>
+    </>
   );
 }
