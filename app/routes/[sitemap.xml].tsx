@@ -1,8 +1,7 @@
 export const loader = () => {
     // handle "GET" request
   // separating xml content from Response to keep clean code. 
-      const content = `
-         <?xml version="1.0" encoding="UTF-8"?>
+      const content = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Homepage -->
   <url>
@@ -218,8 +217,7 @@ export const loader = () => {
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
-</urlset>
-      `
+</urlset>`
       // Return the response with the content, a status 200 message, and the appropriate headers for an XML page
       return new Response(content,{
         status: 200,
