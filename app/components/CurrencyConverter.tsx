@@ -65,7 +65,7 @@ export default function CurrencyConverter({
       const anchorCurrencyLocal = window.localStorage.getItem("anchor");
       let anchor = anchorCurrencyLocal
         ? JSON.parse(anchorCurrencyLocal)
-        : savedListObj[0]?.code;
+        : 0;
 
       if (
         isFalsy(anchor) ||
