@@ -128,7 +128,6 @@ const redis = new Redis({
   url: "https://pure-tortoise-42369.upstash.io",
   token: process.env.REDIS_KEY,
 });
-
 export function parseCurrencies(apiResponse: FixerResponse): Currency {
   const result: any = {};
 
@@ -157,12 +156,11 @@ const validateCurrencyParams = (path: string | undefined, currencyMap: Currency)
   return validCurrencies ? currencies : [];
 };
 export const loader: LoaderFunction = async ({ params }) => {
-  const cache = await redis.get("currency_response") as string;
+  const cacheResponse = await redis.get("currency_response") as { currencyMap: Currency, timestamp: number } | null;
 
   let currencyMap;
   let timestamp;
-  if (false && cache) {
-    let cacheResponse = JSON.parse(cache);
+  if (cacheResponse) {
     currencyMap = cacheResponse.currencyMap;
     timestamp = cacheResponse.timestamp;
   } else {
