@@ -1,4 +1,4 @@
-import { json, LoaderFunction } from "@remix-run/node";
+import { LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData, useParams, useSearchParams } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
 import CurrencyConverter from "~/components/CurrencyConverter";
@@ -129,8 +129,176 @@ const redis = new Redis({
   token: process.env.REDIS_KEY,
 });
 
-export const loader: LoaderFunction = async () => {
-  // return {
+export function parseCurrencies(apiResponse: FixerResponse): Currency {
+  const result: any = {};
+
+  for (const [code, rate] of Object.entries(apiResponse.rates)) {
+    const mapEntry = countryMaps[code as CurrencyCode];
+    if (mapEntry) {
+      result[code] = {
+        name: mapEntry.name,
+        flag: mapEntry.flag,
+        code: code,
+        value: rate,
+      };
+    }
+  }
+
+  return result as Currency;
+}
+const validateCurrencyParams = (path: string | undefined, currencyMap: Currency): string[] => {
+  if (!path) return [];
+  const currencies = path.split('-to-').map(c => c.toUpperCase());
+  
+  if (currencies.length < 2) return [];
+  
+  const validCurrencies = currencies.every(code => code in currencyMap);
+  
+  return validCurrencies ? currencies : [];
+};
+export const loader: LoaderFunction = async ({ params }) => {
+  const cacheResponse = await redis.get("currency_response") as { currencyMap: Currency, timestamp: number } | null;
+
+  let currencyMap;
+  let timestamp;
+  if (cacheResponse) {
+    currencyMap = cacheResponse.currencyMap;
+    timestamp = cacheResponse.timestamp;
+  } else {
+    const response = await fetch(
+      `https://data.fixer.io/api/latest?access_key=${process.env.FIXER_ACCESS_KEY}&format=1`
+    );
+
+    let currencyList: FixerResponse = await response.json();
+    currencyMap = parseCurrencies(currencyList);
+    timestamp = currencyList.timestamp;
+    await redis.set("currency_response", JSON.stringify({ currencyMap, timestamp: timestamp }), {
+      ex: 32400,
+    });
+  }
+
+  const validatedCurrencies = validateCurrencyParams(params.path, currencyMap);
+
+  return {
+    currencyMap,
+    timestamp,
+    validatedCurrencies,
+  };
+};
+
+const popularCurrencies = [
+  { code: "EUR", name: "Euro" },             // France
+  { code: "USD", name: "US Dollar" },        // United States
+  { code: "GBP", name: "British Pound" },    // United Kingdom
+  { code: "CAD", name: "Canadian Dollar" },  // Canada
+  { code: "TRY", name: "Turkish Lira" },     // Turkey
+  { code: "THB", name: "Thai Baht" },        // Thailand
+  { code: "MXN", name: "Mexican Peso" },     // Mexico
+  { code: "MYR", name: "Malaysian Ringgit" }, // Malaysia
+  { code: "SAR", name: "Saudi Riyal" },      // Saudi Arabia
+  { code: "INR", name: "Indian Rupee" },     // India
+  { code: "CNY", name: "Chinese Yuan" },     // China
+  { code: "BRL", name: "Brazilian Real" },   // Brazil
+  { code: "AED", name: "UAE Dirham" },       // United Arab Emirates
+] as Array<{ code: CurrencyCode; name: string}>;
+
+function generateCurrencyPairs() {
+  const currencyCodes = popularCurrencies.map(c => c.code);
+  const pairs = [];
+  
+  // Generate all possible combinations
+  for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < currencyCodes.length; j++) {
+          if (i !== j) { // Avoid pairing a currency with itself
+              pairs.push([currencyCodes[i], currencyCodes[j]]);
+          }
+      }
+  }
+  
+  return pairs;
+}
+const popularPairs = generateCurrencyPairs();
+
+type LoaderReturn = {
+  currencyMap: Currency;
+  timestamp: number;
+  validatedCurrencies: string[];
+}
+export default function index() {
+  const {currencyMap, timestamp, validatedCurrencies} = useLoaderData<LoaderReturn>();
+
+  const footerLinks = [
+    { href: "/about", text: "About" },
+    { href: "/contact", text: "Contact" },
+    { href: "/terms-of-service", text: "Terms of Service" },
+    { href: "/privacy-policy", text: "Privacy Policy" }
+  ];
+
+  return (<>
+    <Card className="w-[98%] max-w-[52rem] mx-auto mt-4">
+      <CardHeader>
+        <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CurrencyConverter currencyMap={currencyMap} convertList={validatedCurrencies}/>
+      </CardContent>
+      <CardFooter>
+        <p>
+          Exchange rates last updated at{" "}
+          {formatter.format(new Date(timestamp * 1000))}
+        </p>
+      </CardFooter>
+    </Card>
+    <div className="w-[98%] max-w-[52rem] mx-auto mt-8 mb-8">
+      <h2 className="text-2xl font-semibold mb-4">Popular Currency Conversions</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {popularPairs.map((countries) => (
+            <Card key={`${countries[0]}-${countries[1]}`} className="hover:bg-slate-50">
+              <Link to={`/convert/${countries[0]}-to-${countries[1]}`} className="block p-4">
+              <TooltipProvider>
+                <Tooltip>
+                <TooltipContent>
+                  {countryMaps[countries[0]].name} to {countryMaps[countries[1]].name}
+                </TooltipContent>
+                  <TooltipTrigger className="flex items-center justify-between w-full">
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{countryMaps[countries[0]].flag}</span>
+                    <span>{countries[0]}</span>
+                  </div>
+                  <span>→</span>
+                  <div className="flex items-center gap-2">
+                    <span>{countries[1]}</span>
+                    <span className="text-xl">{countryMaps[countries[1]].flag}</span>
+                  </div>
+
+                </TooltipTrigger>
+                </Tooltip>
+                </TooltipProvider>
+              </Link>
+            </Card>
+          )
+        )}
+      </div>
+    </div>
+    <div className="w-full bg-gray-100 p-4 mt-8">
+          <h2 className="text-lg font-semibold mb-2 text-center">Useful Links</h2>
+      {footerLinks.map((link) => (
+          <div key={link.href} className="flex align-center gap-4">
+                <Link to={link.href} className="block p-4">
+                  <div className="flex items-center justify-center">
+                    <span>{link.text}</span>
+                  </div>
+                </Link>
+          </div>
+      ))}
+      </div>
+    </>
+  );
+}
+
+
+ // return {
   //   success: true,
   //   timestamp: 1729313584,
   //   base: "EUR",
@@ -309,158 +477,3 @@ export const loader: LoaderFunction = async () => {
   //     ZWL: 350.150234,
   //   },
   // };
-  const cache = await redis.get("currency_response");
-  if (cache) {
-    return json(cache);
-  }
-  const response = await fetch(
-    `https://data.fixer.io/api/latest?access_key=${process.env.FIXER_ACCESS_KEY}&format=1`
-  );
-  const currencyList: FixerResponse[] = await response.json();
-  await redis.set("currency_response", JSON.stringify(currencyList), {
-    ex: 32400,
-  });
-  return json(currencyList);
-};
-
-export function parseCurrencies(apiResponse: FixerResponse): Currency {
-  const result: any = {};
-  const baseValue = apiResponse.rates[apiResponse.base] || 1;
-
-  for (const [code, rate] of Object.entries(apiResponse.rates)) {
-    const mapEntry = countryMaps[code as CurrencyCode];
-    if (mapEntry) {
-      const value = rate / baseValue;
-      result[code] = {
-        name: mapEntry.name,
-        flag: mapEntry.flag,
-        code: code,
-        value,
-      };
-    }
-  }
-
-  return result as Currency;
-}
-const popularCurrencies = [
-  { code: "EUR", name: "Euro" },             // France
-  { code: "USD", name: "US Dollar" },        // United States
-  { code: "GBP", name: "British Pound" },    // United Kingdom
-  { code: "CAD", name: "Canadian Dollar" },  // Canada
-  { code: "TRY", name: "Turkish Lira" },     // Turkey
-  { code: "THB", name: "Thai Baht" },        // Thailand
-  { code: "MXN", name: "Mexican Peso" },     // Mexico
-  { code: "MYR", name: "Malaysian Ringgit" }, // Malaysia
-  { code: "SAR", name: "Saudi Riyal" },      // Saudi Arabia
-  { code: "INR", name: "Indian Rupee" },     // India
-  { code: "CNY", name: "Chinese Yuan" },     // China
-  { code: "BRL", name: "Brazilian Real" },   // Brazil
-  { code: "AED", name: "UAE Dirham" },       // United Arab Emirates
-];
-
-function generateCurrencyPairs() {
-  const currencyCodes = popularCurrencies.map(c => c.code);
-  const pairs = [];
-  
-  // Generate all possible combinations
-  for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < currencyCodes.length; j++) {
-          if (i !== j) { // Avoid pairing a currency with itself
-              pairs.push([currencyCodes[i], currencyCodes[j]]);
-          }
-      }
-  }
-  
-  return pairs;
-}
-const popularPairs = generateCurrencyPairs();
-
-
-export default function index() {
-  const currencyList = useLoaderData<FixerResponse>();
-  const params = useParams();
-  const validateCurrencyParams = (path: string | undefined, rates: FixerResponse['rates']): string[] => {
-
-    if (!path) return [];
-    const currencies = path.split('-to-').map(c => c.toUpperCase());
-    
-
-    if (currencies.length < 2) return [];
-    
-
-    const validCurrencies = currencies.every(code => code in rates);
-    
-    return validCurrencies ? currencies : [];
-  };
-
-  const validatedCurrencies = validateCurrencyParams(params.path, currencyList.rates);
-
-  const footerLinks = [
-    { href: "/about", text: "About" },
-    { href: "/contact", text: "Contact" },
-    { href: "/terms-of-service", text: "Terms of Service" },
-    { href: "/privacy-policy", text: "Privacy Policy" }
-  ];
-
-  return (<>
-    <Card className="w-[98%] max-w-[52rem] mx-auto mt-4">
-      <CardHeader>
-        <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <CurrencyConverter currencyMap={parseCurrencies(currencyList)} convertList={validatedCurrencies}/>
-      </CardContent>
-      <CardFooter>
-        <p>
-          Exchange rates last updated at{" "}
-          {formatter.format(new Date(currencyList.timestamp * 1000))}
-        </p>
-      </CardFooter>
-    </Card>
-    <div className="w-[98%] max-w-[52rem] mx-auto mt-8 mb-8">
-      <h2 className="text-2xl font-semibold mb-4">Popular Currency Conversions</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {popularPairs.map((countries) => (
-            <Card key={`${countries[0]}-${countries[1]}`} className="hover:bg-slate-50">
-              <Link to={`/${countries[0]}-to-${countries[1]}`} className="block p-4">
-              <TooltipProvider>
-                <Tooltip>
-                <TooltipContent>
-                  {countryMaps[countries[0]].name} to {countryMaps[countries[1]].name}
-                </TooltipContent>
-                  <TooltipTrigger className="flex items-center justify-between w-full">
-
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl">{countryMaps[countries[0]].flag}</span>
-                    <span>{countries[0]}</span>
-                  </div>
-                  <span>→</span>
-                  <div className="flex items-center gap-2">
-                    <span>{countries[1]}</span>
-                    <span className="text-xl">{countryMaps[countries[1]].flag}</span>
-                  </div>
-
-                </TooltipTrigger>
-                </Tooltip>
-                </TooltipProvider>
-              </Link>
-            </Card>
-          )
-        )}
-      </div>
-    </div>
-    <div className="w-full bg-gray-100 p-4 mt-8">
-          <h2 className="text-lg font-semibold mb-2 text-center">Useful Links</h2>
-      {footerLinks.map((link) => (
-          <div className="flex align-center gap-4">
-                <Link to={link.href} className="block p-4">
-                  <div className="flex items-center justify-center">
-                    <span>{link.text}</span>
-                  </div>
-                </Link>
-          </div>
-      ))}
-      </div>
-    </>
-  );
-}

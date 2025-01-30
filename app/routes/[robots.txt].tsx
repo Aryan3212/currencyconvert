@@ -5,7 +5,7 @@ Allow: /about
 Allow: /contact
 Allow: /privacy-policy 
 Allow: /terms-of-service
-Allow: /*-to-*
+Allow: /convert/*
 
 # Block access to API endpoints
 Disallow: /api/

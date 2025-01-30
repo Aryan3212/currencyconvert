@@ -106,18 +106,13 @@ export default function CurrencyConverter({
 
   // In your component
   useEffect(() => {
-    if (convertList.length > 1){
+    if (convertList.length > 1) {
       const convertCurrencies = convertList.map((code) => ({
         ...currencyMap[code],
         displayValue: currencyMap[code].value.toFixed(2).toString(),
         error: false
       }));
       setCurrencies(convertCurrencies);
-      window.localStorage.setItem(
-        "savedCurrencyList", 
-        JSON.stringify(convertCurrencies)
-      );
-      window.localStorage.setItem("anchor", JSON.stringify(0));
     } else {
       const processedCurrencies = processLocalStorageCurrencies();
       if (processedCurrencies) {
