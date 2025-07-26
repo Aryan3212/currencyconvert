@@ -21,7 +21,7 @@ import type { LinksFunction } from "@remix-run/node";
 import { TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Tooltip, TooltipContent } from "~/components/ui/tooltip";
 
-export const links: LinksFunction = () => {
+export const links: LinksFunction = ({ pathname }) => {
   return [
     {
       rel: "icon",
@@ -30,7 +30,7 @@ export const links: LinksFunction = () => {
     },
     {
       rel: "canonical",
-      href: "https://www.currencyconverterpro.com/",
+      href: `https://www.currencyconverterpro.com${pathname}`,
     },
   ];
 };
@@ -226,10 +226,9 @@ const formatter = new Intl.DateTimeFormat("en-US", {
 });
 
 export const meta: MetaFunction = ({ params }) => {
-  const title =
-    "Currency Converter Pro | Multi-Currency Travel Calculator with Offline Storage";
+  const title = "Currency Converter Pro";
   const description =
-    "Best free and simple travel-friendly currency converter with offline storage. Convert USD, EUR, GBP, JPY & 150+ currencies instantly. Save calculations for quick access while traveling. Real-time exchange rates, completely free.";
+    "Best free travel-friendly currency converter. Convert USD, EUR, GBP, JPY & 150+ currencies instantly. Save calculations. Real-time exchange rates.";
   const keywords =
     "currency converter, travel calculator, offline currency converter, exchange rates, USD, EUR, GBP, JPY, THB, saved calculations, travel tools, currency calculator, multiple currency conversion";
   const canonicalUrl = "https://www.currencyconverterpro.com"; // Replace with your actual domain
@@ -699,4 +698,3 @@ export default function index() {
 //     ZWL: 350.150234,
 //   },
 // };
-
