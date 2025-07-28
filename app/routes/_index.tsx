@@ -27,11 +27,7 @@ export const links: LinksFunction = () => {
       rel: "icon",
       href: "/favicon.png",
       type: "image/png",
-    },
-    {
-      rel: "canonical",
-      href: "https://www.currencyconverterpro.com/",
-    },
+    }
   ];
 };
 
@@ -232,7 +228,7 @@ export const meta: MetaFunction = ({ params }) => {
     "Best free travel-friendly currency converter. Convert USD, EUR, GBP, JPY & 150+ currencies instantly. Save calculations. Real-time exchange rates.";
   const keywords =
     "currency converter, travel calculator, offline currency converter, exchange rates, USD, EUR, GBP, JPY, THB, saved calculations, travel tools, currency calculator, multiple currency conversion";
-  const canonicalUrl = "https://www.currencyconverterpro.com"; // Replace with your actual domain
+  const baseUrl = "https://www.currencyconverterpro.com"; // Replace with your actual domain
 
   return [
     // Basic Meta Tags
@@ -240,16 +236,16 @@ export const meta: MetaFunction = ({ params }) => {
     { name: "description", content: description },
     { name: "keywords", content: keywords },
     { name: "robots", content: "index, follow" },
-    { rel: "canonical", href: canonicalUrl },
+    { rel: "canonical", href: baseUrl },
 
     // Open Graph Tags
     { property: "og:title", content: title },
     { property: "og:description", content: description },
     { property: "og:type", content: "website" },
-    { property: "og:url", content: canonicalUrl },
+    { property: "og:url", content: baseUrl },
     {
       property: "og:image",
-      content: `${canonicalUrl}/currency-converter-pro-1200x630.png`,
+      content: `${baseUrl}/currency-converter-pro-1200x630.png`,
     },
     {
       property: "og:image:alt",
@@ -265,7 +261,7 @@ export const meta: MetaFunction = ({ params }) => {
     { name: "twitter:description", content: description },
     {
       name: "twitter:image",
-      content: `${canonicalUrl}/currency-converter-pro-1200x630.png`,
+      content: `${baseUrl}/currency-converter-pro-1200x630.png`,
     },
     {
       name: "twitter:image:alt",
@@ -277,30 +273,6 @@ export const meta: MetaFunction = ({ params }) => {
     { name: "application-name", content: "Currency Converter Pro" },
     { name: "apple-mobile-web-app-title", content: "Currency Converter Pro" },
     { name: "theme-color", content: "#FFFFFF" }, // Replace with your brand color
-
-    // Schema.org JSON-LD
-    {
-      "script:ld+json": {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        name: "Currency Converter Pro",
-        description: description,
-        url: canonicalUrl,
-        applicationCategory: "FinanceApplication",
-        operatingSystem: "All",
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "USD",
-        },
-        featureList: [
-          "Multiple currency conversion",
-          "Offline storage for saved calculations",
-          "Travel-friendly interface",
-          "Real-time exchange rates",
-        ],
-      },
-    },
   ];
 };
 
