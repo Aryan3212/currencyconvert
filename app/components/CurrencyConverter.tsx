@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Plus, XIcon } from "lucide-react";
 import { LoaderCircle } from "lucide-react";
@@ -36,14 +34,19 @@ export default function CurrencyConverter({
   currencyMap: Currency;
   convertList: string[];
 }) {
+  // Single, shared formatter for display values (2 decimal places)
+  const numberFormatter = new Intl.NumberFormat(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
   const usd = currencyMap["USD"];
   const thb = currencyMap["THB"];
   const eur = currencyMap["EUR"];
   let anchor = 0;
   const defaultCurrencies = [
-    { ...usd, displayValue: usd.value.toFixed(2).toString(), error: false },
-    { ...eur, displayValue: eur.value.toFixed(2).toString(), error: false },
-    { ...thb, displayValue: thb.value.toFixed(2).toString(), error: false },
+    { ...usd, displayValue: numberFormatter.format(usd.value), error: false },
+    { ...eur, displayValue: numberFormatter.format(eur.value), error: false },
+    { ...thb, displayValue: numberFormatter.format(thb.value), error: false },
   ]
   const [currencies, setCurrencies] = useState<CurrencyState[]>(defaultCurrencies);
   const [open, setOpen] = useState(false);
@@ -91,9 +94,9 @@ export default function CurrencyConverter({
       const updatedList = savedListObj.map((currency) => ({
         ...currency,
         ...updatedCurrencyMap[currency.code],
-        displayValue: updatedCurrencyMap[currency.code].value
-          .toFixed(2)
-          .toString(),
+        displayValue: numberFormatter.format(
+          updatedCurrencyMap[currency.code].value
+        ),
         error: false,
       }));
 
@@ -109,13 +112,13 @@ export default function CurrencyConverter({
     if (convertList.length > 1) {
       const convertCurrencies = convertList.map((code) => ({
         ...currencyMap[code],
-        displayValue: currencyMap[code].value.toFixed(2).toString(),
+        displayValue: numberFormatter.format(currencyMap[code].value),
         error: false
       }));
       setCurrencies(convertCurrencies);
     } else {
       const processedCurrencies = processLocalStorageCurrencies();
-      if (processedCurrencies) {
+      if (processedCurrencies.length > 0) {
         setCurrencies(processedCurrencies);
       }
     }
@@ -143,9 +146,9 @@ export default function CurrencyConverter({
         if (currencyIndex === index) {
           array[currencyIndex].displayValue = newValue;
         } else {
-          array[currencyIndex].displayValue = currencyMap[currency.code].value
-            .toFixed(2)
-            .toString();
+          array[currencyIndex].displayValue = numberFormatter.format(
+            currencyMap[currency.code].value
+          );
         }
       });
     } else {
@@ -170,18 +173,23 @@ export default function CurrencyConverter({
         name: currency.name,
         flag: currency.flag,
         code: currency.code,
-        displayValue: currency.value.toFixed(2).toString(),
+        symbol: currency.symbol,
+        displayValue: numberFormatter.format(currency.value),
         error: false,
       },
     ];
-    setCurrencies(addedCurrencyList);
+    setCurrencies(addedCurrencyList as CurrencyState[]);
     window.localStorage.setItem(
       "savedCurrencyList",
       JSON.stringify(addedCurrencyList)
     );
     setOpen(false);
   };
-
+  const handleDisplayValueChange = (index: number, newValue: string, focus: boolean) => {
+    const updatedCurrencies = [...currencies];
+    updatedCurrencies[index].displayValue = focus ? updatedCurrencies[index].value.toFixed(2).toString() : newValue;
+    setCurrencies(updatedCurrencies);
+  };
   const removeCurrency = (index: number) => {
     const filteredCurrencies = currencies.filter((_, i) => i !== index);
     setCurrencies(filteredCurrencies);
@@ -217,10 +225,24 @@ export default function CurrencyConverter({
               {currency.name}
             </span>
           </div>
+          <div className="w-full flex bg-transparent border-b border-input">
+           <span className="font-bold inline mr-1 text-2xl" aria-label={currency.name}>
+            {currency.symbol}
+          </span>
           <input
             value={currency.displayValue}
             onChange={(e) => handleValueChange(index, e.target.value)}
-            className="w-full text-3xl font-medium bg-transparent border-b border-input focus:outline-none focus:border-primary transition-colors"
+            onFocus={() => {
+              handleDisplayValueChange(index, currency.value.toFixed(2).toString(), true);
+            }}
+            onBlur={() => {
+              if (!currency.error) {
+                handleDisplayValueChange(index, numberFormatter.format(currency.value), false);
+              }
+              }
+            }
+            className="basis-5/6 text-3xl font-medium focus:outline-none focus:border-primary transition-colors"
+            name={`Amount in ${currency.name}`}
             aria-label={`Amount in ${currency.name}`}
           />
           <Button
@@ -232,6 +254,7 @@ export default function CurrencyConverter({
           >
             <XIcon className="h-6 w-6" aria-label="Remove Currency" />
           </Button>
+          </div>
           {currency.error && (
             <Alert variant="destructive" className="mt-2">
               <AlertCircle className="h-4 w-4" />

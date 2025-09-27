@@ -302,6 +302,15 @@ export function parseCurrencies(apiResponse: FixerResponse): Currency {
         flag: mapEntry.flag,
         code: code,
         value: rate,
+        symbol: mapEntry.symbol
+      };
+    } else {
+      result[code] = {
+        name: code,
+        flag: "🏳️",
+        symbol: code,
+        value: rate,
+        code: code
       };
     }
   }
@@ -341,7 +350,6 @@ export const loader: LoaderFunction = async ({ params }) => {
     if (currencyList.success === false) {
       currencyList = fallbackApiResponse();
     }
-    console.log(currencyList);
     currencyMap = parseCurrencies(currencyList);
     timestamp = currencyList.timestamp;
     await redis.set(

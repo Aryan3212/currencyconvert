@@ -4,5 +4,6 @@ export type Currency = {
     flag: string;
     code: string;
     value: number;
+    symbol: string;
   }
 };
