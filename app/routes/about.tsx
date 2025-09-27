@@ -82,6 +82,7 @@ export const meta: MetaFunction = ({ params }) => {
 
 export default function About() {
   return (
+    <>
     <Card className="w-[98%] max-w-[52rem] mx-auto mt-4 p-6 bg-white shadow-lg rounded-lg">
       <div className="w-[98%] max-w-[52rem] mx-auto mt-4">
         <Link to="/" className="text-blue-600 hover:text-blue-800">
@@ -134,5 +135,54 @@ export default function About() {
         </p>
       </CardContent>
     </Card>
+    <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
+      <h2 className="text-lg basis-full font-semibold mb-2 text-center">Useful Links</h2>
+      <div className="basis-1/4 align-center gap-4">
+        <Link to="/" className="block p-4">
+          <div className="items-center justify-center">
+            <span>Home</span>
+          </div>
+        </Link>
+      </div>
+      <div className="basis-1/4 align-center gap-4">
+        <Link to="/contact" className="block p-4">
+          <div className="items-center justify-center">
+            <span>Contact</span>
+          </div>
+        </Link>
+      </div>
+      <div className="basis-1/4 align-center gap-4">
+        <Link to="/terms-of-service" className="block p-4">
+          <div className="items-center justify-center">
+            <span>Terms of Service</span>
+          </div>
+        </Link>
+      </div>
+      <div className="basis-1/4 align-center gap-4">
+        <Link to="/privacy-policy" className="block p-4">
+          <div className="items-center justify-center">
+            <span>Privacy Policy</span>
+          </div>
+        </Link>
+      </div>
+      <div className="mt-10 space-y-2 basis-full">
+        <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-4">
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+            Works offline
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+            Install as app
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+            Save to home screen
+          </span>
+        </div>
+        <h2 className="text-lg">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
+      </div>
+    </div>
+    </>
   );
 }

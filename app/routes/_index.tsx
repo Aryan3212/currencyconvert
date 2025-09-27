@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
 import CurrencyConverter from "~/components/CurrencyConverter";
+import PWAStatus from "~/components/PWAStatus";
 import {
   Card,
   CardContent,
@@ -20,6 +21,7 @@ import { Redis } from "@upstash/redis";
 import type { LinksFunction } from "@remix-run/node";
 import { TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Tooltip, TooltipContent } from "~/components/ui/tooltip";
+import React from "react";
 
 export const links: LinksFunction = () => {
   return [
@@ -356,7 +358,7 @@ export const loader: LoaderFunction = async ({ params }) => {
       "currency_response",
       JSON.stringify({ currencyMap, timestamp: timestamp }),
       {
-        ex: 32400,
+        ex: 50000,
       }
     );
   }
@@ -369,7 +371,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     validatedCurrencies,
   };
 };
-
+let isHydrating = true;
 const popularCurrencies = [
   { code: "EUR", name: "Euro" }, // France
   { code: "USD", name: "US Dollar" }, // United States
@@ -412,7 +414,13 @@ type LoaderReturn = {
 export default function index() {
   const { currencyMap, timestamp, validatedCurrencies } =
     useLoaderData<LoaderReturn>();
-
+  const [isHydrated, setIsHydrated] = React.useState(
+    !isHydrating
+  );
+  React.useEffect(() => {
+    isHydrating = false;
+    setIsHydrated(true);
+  }, []);
   const footerLinks = [
     { href: "/about", text: "About" },
     { href: "/contact", text: "Contact" },
@@ -422,9 +430,16 @@ export default function index() {
 
   return (
     <>
-      <Card className="w-[98%] max-w-7xl mx-auto mt-4 mb-[15rem]">
+      {isHydrated && <PWAStatus />}
+      <Card className="w-[98%] max-w-6xl mx-auto mt-4 mb-[15rem]">
         <CardHeader>
-          <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
+          <div className="flex items-center gap-3 flex-wrap">
+            <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
+            <span className="flex items-center gap-1 text-xs bg-green-50 px-2 py-1 rounded-full border border-green-200">
+              <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+              Works offline
+            </span>
+          </div>
         </CardHeader>
         <CardContent>
           <CurrencyConverter
@@ -433,10 +448,13 @@ export default function index() {
           />
         </CardContent>
         <CardFooter>
-          <p>
-            Exchange rates last updated at{" "}
-            {formatter.format(new Date(timestamp * 1000))}
-          </p>
+          {isHydrated && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <p>
+              Exchange rates last updated at{" "}
+              {formatter.format(new Date(timestamp * 1000))}
+            </p>
+          </div>)}
         </CardFooter>
       </Card>
       <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
@@ -491,8 +509,25 @@ export default function index() {
             </Card>
           ))}
         </div>
+        <div className="mt-10 space-y-2">
+          <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-4">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Works offline
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Install as app
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              Save to home screen
+            </span>
+          </div>
+          <h2 className="text-lg">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
+        </div>
       </div>
-      </div>
+     </div>
     </>
   );
 }

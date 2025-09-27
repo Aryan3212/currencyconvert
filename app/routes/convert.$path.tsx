@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
 import CurrencyConverter from "~/components/CurrencyConverter";
+import PWAStatus from "~/components/PWAStatus";
 import {
   Card,
   CardContent,
@@ -20,6 +21,7 @@ import { Redis } from "@upstash/redis";
 import type { LinksFunction } from "@remix-run/node";
 import { TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Tooltip, TooltipContent } from "~/components/ui/tooltip";
+import React from "react";
 
 export const links: LinksFunction = () => {
   return [
@@ -399,9 +401,17 @@ type LoaderReturn = {
   timestamp: number;
   validatedCurrencies: string[];
 };
+let isHydrating = true;
 export default function index() {
   const { currencyMap, timestamp, validatedCurrencies } =
     useLoaderData<LoaderReturn>();
+  const [isHydrated, setIsHydrated] = React.useState(
+    !isHydrating
+  );
+  React.useEffect(() => {
+    isHydrating = false;
+    setIsHydrated(true);
+  }, []);
 
   const footerLinks = [
     { href: "/about", text: "About" },
@@ -412,6 +422,7 @@ export default function index() {
 
   return (
     <>
+      {isHydrated && <PWAStatus />}
       <div className="w-[98%] max-w-[52rem] mx-auto mt-4">
         <Link to="/" className="text-blue-600 hover:text-blue-800">
           ← Go back to Saved Calculation
@@ -419,7 +430,13 @@ export default function index() {
       </div>
       <Card className="w-[98%] max-w-[52rem] mx-auto mt-4">
         <CardHeader>
-          <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
+          <div className="flex items-center gap-3 flex-wrap">
+            <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
+            <span className="flex items-center gap-1 text-xs bg-green-50 px-2 py-1 rounded-full border border-green-200">
+              <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+              Works offline
+            </span>
+          </div>
         </CardHeader>
         <CardContent>
           <CurrencyConverter
@@ -428,10 +445,13 @@ export default function index() {
           />
         </CardContent>
         <CardFooter>
-          <p>
-            Exchange rates last updated at{" "}
-            {formatter.format(new Date(timestamp * 1000))}
-          </p>
+          {isHydrated && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <p>
+              Exchange rates last updated at{" "}
+              {formatter.format(new Date(timestamp * 1000))}
+            </p>
+          </div>)}
         </CardFooter>
       </Card>
       <div className="w-[98%] max-w-[52rem] mx-auto mt-8 mb-8">
@@ -476,17 +496,34 @@ export default function index() {
           ))}
         </div>
       </div>
-      <div className="w-full bg-gray-100 p-4 mt-8">
-        <h2 className="text-lg font-semibold mb-2 text-center">Useful Links</h2>
+      <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
+        <h2 className="text-lg basis-full font-semibold mb-2 text-center">Useful Links</h2>
         {footerLinks.map((link) => (
-          <div key={link.href} className="flex align-center gap-4">
+          <div key={link.href} className="basis-1/4 align-center gap-4">
             <Link to={link.href} className="block p-4">
-              <div className="flex items-center justify-center">
+              <div className="items-center justify-center">
                 <span>{link.text}</span>
               </div>
             </Link>
           </div>
         ))}
+        <div className="mt-10 space-y-2 basis-full">
+          <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-4">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Works offline
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Install as app
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              Save to home screen
+            </span>
+          </div>
+          <h2 className="text-lg">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
+        </div>
       </div>
     </>
   );
