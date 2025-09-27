@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, XIcon } from "lucide-react";
+import { Plus, XIcon, Save, Trash2 } from "lucide-react";
 import { LoaderCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
@@ -22,6 +22,13 @@ type ValueType = Currency[keyof Currency];
 type CurrencyState = ValueType & {
   displayValue: string;
   error: boolean;
+};
+
+type SavedConversion = {
+  id: string;
+  currencies: CurrencyState[];
+  timestamp: number;
+  displayName: string;
 };
 
 function isFalsy(item: unknown): boolean {
@@ -51,6 +58,7 @@ export default function CurrencyConverter({
   const [currencies, setCurrencies] = useState<CurrencyState[]>(defaultCurrencies);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [savedConversions, setSavedConversions] = useState<SavedConversion[]>([]);
   // Function to process localStorage and extract currency data
   const processLocalStorageCurrencies = (): CurrencyState[] => {
     try {
@@ -107,6 +115,54 @@ export default function CurrencyConverter({
     }
   };
 
+  // Function to load saved conversions from localStorage
+  const loadSavedConversions = (): SavedConversion[] => {
+    try {
+      const saved = window.localStorage.getItem("savedConversions");
+      if (!saved) return [];
+      return JSON.parse(saved) as SavedConversion[];
+    } catch (error) {
+      console.error("Error loading saved conversions:", error);
+      return [];
+    }
+  };
+
+  // Function to generate display name for conversion
+  const generateConversionDisplayName = (currencies: CurrencyState[]): string => {
+    return currencies
+      .map(currency => `${currency.flag} ${currency.code}(${currency.symbol})`)
+      .join(" → ");
+  };
+
+  // Function to save current conversion
+  const saveCurrentConversion = () => {
+    const newConversion: SavedConversion = {
+      id: Date.now().toString(),
+      currencies: [...currencies],
+      timestamp: Date.now(),
+      displayName: generateConversionDisplayName(currencies)
+    };
+
+    const updatedConversions = [...savedConversions, newConversion];
+    setSavedConversions(updatedConversions);
+    window.localStorage.setItem("savedConversions", JSON.stringify(updatedConversions));
+  };
+
+  // Function to load a saved conversion
+  const loadConversion = (conversion: SavedConversion) => {
+    setCurrencies(conversion.currencies);
+    window.localStorage.setItem("savedCurrencyList", JSON.stringify(conversion.currencies));
+    window.localStorage.setItem("anchor", JSON.stringify(0));
+  };
+
+  // Function to delete a saved conversion
+  const deleteConversion = (conversionId: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent triggering the load conversion
+    const updatedConversions = savedConversions.filter(conv => conv.id !== conversionId);
+    setSavedConversions(updatedConversions);
+    window.localStorage.setItem("savedConversions", JSON.stringify(updatedConversions));
+  };
+
   // In your component
   useEffect(() => {
     if (convertList.length > 1) {
@@ -122,6 +178,10 @@ export default function CurrencyConverter({
         setCurrencies(processedCurrencies);
       }
     }
+
+    // Load saved conversions
+    const loadedConversions = loadSavedConversions();
+    setSavedConversions(loadedConversions);
 
     setLoading(false);
   }, [convertList]);
@@ -211,95 +271,149 @@ export default function CurrencyConverter({
       </h1>
     </div>
   ) : (
-    <div className="space-y-4">
-      {currencies.map((currency, index) => (
-        <div key={index} className="relative">
-          <div className="flex items-center space-x-2 mb-1">
-            <span className="text-2xl" aria-hidden="true">
-              {currency.flag}
-            </span>
-            <span className="font-bold" aria-label={currency.name}>
-              {currency.code}
-            </span>
-            <span className="text-sm text-muted-foreground">
-              {currency.name}
-            </span>
-          </div>
-          <div className="w-full flex bg-transparent border-b border-input">
-           <span className="font-bold inline mr-1 text-2xl" aria-label={currency.name}>
-            {currency.symbol}
-          </span>
-          <input
-            value={currency.displayValue}
-            onChange={(e) => handleValueChange(index, e.target.value)}
-            onFocus={() => {
-              handleDisplayValueChange(index, currency.value.toFixed(2).toString(), true);
-            }}
-            onBlur={() => {
-              if (!currency.error) {
-                handleDisplayValueChange(index, numberFormatter.format(currency.value), false);
-              }
-              }
-            }
-            className="basis-5/6 text-3xl font-medium focus:outline-none focus:border-primary transition-colors"
-            name={`Amount in ${currency.name}`}
-            aria-label={`Amount in ${currency.name}`}
-          />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => removeCurrency(index)}
-            className="absolute right-0 top-8 text-muted-foreground hover:text-foreground hover:bg-red-100 hover:text-red-500"
-            aria-label={`Remove ${currency.name}`}
-          >
-            <XIcon className="h-6 w-6" aria-label="Remove Currency" />
-          </Button>
-          </div>
-          {currency.error && (
-            <Alert variant="destructive" className="mt-2">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>
-                Error: Please input a proper number greater than 0.
-              </AlertTitle>
-            </Alert>
-          )}
-        </div>
-      ))}
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+    <div className="flex flex-wrap gap-8">
+      <div className="flex-1 basis-[60%] space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold">Currency Converter</h2>
           <Button
             variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-start text-white hover:text-white bg-primary hover:bg-primary/90 text-lg py-6"
+            size="sm"
+            onClick={saveCurrentConversion}
+            className="flex items-center gap-2"
           >
-            <Plus className="mr-2 h-5 w-5" />
-            Add Currency
+            <Save className="h-4 w-4" />
+            Save Conversion
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-full p-0 text-xl">
-          <Command className="text-xl min-w-64">
-            <CommandInput placeholder="Search currency..." />
-            <CommandEmpty>No currency found.</CommandEmpty>
-            <CommandList>
-              {Object.entries(currencyMap)
-                .filter((c) => !currencies.some((curr) => curr.code === c[0]))
-                .map((currency) => (
-                  <CommandItem
-                    key={currency[1].name}
-                    onSelect={() => addCurrency(currency[1])}
-                    className="text-xl"
-                  >
-                    <span className="mr-2" aria-hidden="true">
-                      {currency[1].flag}
+        </div>
+        {currencies.map((currency, index) => (
+          <div key={index} className="relative">
+            <div className="flex items-center space-x-2 mb-1">
+              <span className="text-2xl" aria-hidden="true">
+                {currency.flag}
+              </span>
+              <span className="font-bold" aria-label={currency.name}>
+                {currency.code}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {currency.name}
+              </span>
+            </div>
+            <div className="w-full flex bg-transparent border-b border-input">
+             <span className="font-bold inline mr-1 text-2xl" aria-label={currency.name}>
+              {currency.symbol}
+            </span>
+            <input
+              value={currency.displayValue}
+              onChange={(e) => handleValueChange(index, e.target.value)}
+              onFocus={() => {
+                handleDisplayValueChange(index, currency.value.toFixed(2).toString(), true);
+              }}
+              onBlur={() => {
+                if (!currency.error) {
+                  handleDisplayValueChange(index, numberFormatter.format(currency.value), false);
+                }
+                }
+              }
+              className="basis-5/6 text-3xl font-medium focus:outline-none focus:border-primary transition-colors"
+              name={`Amount in ${currency.name}`}
+              aria-label={`Amount in ${currency.name}`}
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => removeCurrency(index)}
+              className="absolute right-0 top-8 text-muted-foreground hover:text-foreground hover:bg-red-100 hover:text-red-500"
+              aria-label={`Remove ${currency.name}`}
+            >
+              <XIcon className="h-6 w-6" aria-label="Remove Currency" />
+            </Button>
+            </div>
+            {currency.error && (
+              <Alert variant="destructive" className="mt-2">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>
+                  Error: Please input a proper number greater than 0.
+                </AlertTitle>
+              </Alert>
+            )}
+          </div>
+        ))}
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-full justify-start text-white hover:text-white bg-primary hover:bg-primary/90 text-lg py-6"
+            >
+              <Plus className="mr-2 h-5 w-5" />
+              Add Currency
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0 text-xl">
+            <Command className="text-xl min-w-64">
+              <CommandInput placeholder="Search currency..." />
+              <CommandEmpty>No currency found.</CommandEmpty>
+              <CommandList>
+                {Object.entries(currencyMap)
+                  .filter((c) => !currencies.some((curr) => curr.code === c[0]))
+                  .map((currency) => (
+                    <CommandItem
+                      key={currency[1].name}
+                      onSelect={() => addCurrency(currency[1])}
+                      className="text-xl"
+                    >
+                      <span className="mr-2" aria-hidden="true">
+                        {currency[1].flag}
+                      </span>
+                      {currency[1].name} ({currency[1].code})
+                    </CommandItem>
+                  ))}
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="basis-72 space-y-4">
+        <h2 className="text-lg font-semibold">Saved Conversions</h2>
+        {savedConversions.length === 0 ? (
+          <p className="text-muted-foreground text-center py-8">
+            No Conversions Saved
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {savedConversions.map((conversion, index) => (
+              <div
+                key={conversion.id}
+                className="p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors relative group"
+                onClick={() => loadConversion(conversion)}
+              >
+                <div className="flex justify-between items-start mb-1">
+                  <span className="font-medium text-sm">#{index + 1}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(conversion.timestamp).toLocaleDateString()}
                     </span>
-                    {currency[1].name} ({currency[1].code})
-                  </CommandItem>
-                ))}
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => deleteConversion(conversion.id, e)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 hover:bg-red-100 hover:text-red-500"
+                      aria-label="Delete conversion"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="text-sm break-all">
+                  {conversion.displayName}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

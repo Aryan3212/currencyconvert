@@ -422,7 +422,7 @@ export default function index() {
 
   return (
     <>
-      <Card className="w-[98%] max-w-[52rem] mx-auto mt-4">
+      <Card className="w-[98%] max-w-7xl mx-auto mt-4 mb-[15rem]">
         <CardHeader>
           <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
         </CardHeader>
@@ -439,7 +439,18 @@ export default function index() {
           </p>
         </CardFooter>
       </Card>
-      <div className="w-[98%] max-w-[52rem] mx-auto mt-8 mb-8">
+      <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
+        <h2 className="text-lg basis-full font-semibold mb-2 text-center">Useful Links</h2>
+        {footerLinks.map((link) => (
+          <div key={link.href} className="basis-1/4 align-center gap-4">
+            <Link to={link.href} className="block p-4">
+              <div className="items-center justify-center">
+                <span>{link.text}</span>
+              </div>
+            </Link>
+          </div>
+        ))}
+        <div className="basis-full max-w-[52rem] mx-auto mt-8 mb-8">
         <h2 className="text-2xl font-semibold mb-4">
           Popular Currency Conversions
         </h2>
@@ -481,17 +492,6 @@ export default function index() {
           ))}
         </div>
       </div>
-      <div className="w-full bg-gray-100 p-4 mt-8">
-        <h2 className="text-lg font-semibold mb-2 text-center">Useful Links</h2>
-        {footerLinks.map((link) => (
-          <div key={link.href} className="flex align-center gap-4">
-            <Link to={link.href} className="block p-4">
-              <div className="flex items-center justify-center">
-                <span>{link.text}</span>
-              </div>
-            </Link>
-          </div>
-        ))}
       </div>
     </>
   );
