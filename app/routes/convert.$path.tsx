@@ -429,9 +429,24 @@ export default function index() {
   const [isHydrated, setIsHydrated] = React.useState(
     !isHydrating
   );
+  const [isOnline, setIsOnline] = React.useState(
+    typeof navigator !== "undefined" ? navigator.onLine : true
+  );
   React.useEffect(() => {
     isHydrating = false;
     setIsHydrated(true);
+  }, []);
+  React.useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const updateStatus = () => setIsOnline(navigator.onLine);
+    window.addEventListener("online", updateStatus);
+    window.addEventListener("offline", updateStatus);
+    return () => {
+      window.removeEventListener("online", updateStatus);
+      window.removeEventListener("offline", updateStatus);
+    };
   }, []);
 
   const footerLinks = [
@@ -501,48 +516,50 @@ export default function index() {
               Save to home screen
             </span>
           </div>
-          <div className="w-[98%] max-w-[52rem] mx-auto mt-8 mb-8">
-        <h2 className="text-2xl font-semibold mb-4">
-          Popular Currency Conversions
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {popularPairs.map((countries) => (
-            <Card
-              key={`${countries[0]}-${countries[1]}`}
-              className="hover:bg-slate-50"
-            >
-              <Link
-                to={`/convert/${countries[0]}-to-${countries[1]}`}
-                className="block p-4"
-              >
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipContent>
-                      {countryMaps[countries[0]].name} to{" "}
-                      {countryMaps[countries[1]].name}
-                    </TooltipContent>
-                    <TooltipTrigger className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">
-                          {countryMaps[countries[0]].flag}
-                        </span>
-                        <span>{countries[0]}</span>
-                      </div>
-                      <span>→</span>
-                      <div className="flex items-center gap-2">
-                        <span>{countries[1]}</span>
-                        <span className="text-xl">
-                          {countryMaps[countries[1]].flag}
-                        </span>
-                      </div>
-                    </TooltipTrigger>
-                  </Tooltip>
-                </TooltipProvider>
-              </Link>
-            </Card>
-          ))}
-        </div>
-      </div>
+          {isOnline && (
+            <div className="w-[98%] max-w-[52rem] mx-auto mt-8 mb-8">
+              <h2 className="text-2xl font-semibold mb-4">
+                Popular Currency Conversions
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {popularPairs.map((countries) => (
+                  <Card
+                    key={`${countries[0]}-${countries[1]}`}
+                    className="hover:bg-slate-50"
+                  >
+                    <Link
+                      to={`/convert/${countries[0]}-to-${countries[1]}`}
+                      className="block p-4"
+                    >
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipContent>
+                            {countryMaps[countries[0]].name} to{" "}
+                            {countryMaps[countries[1]].name}
+                          </TooltipContent>
+                          <TooltipTrigger className="flex items-center justify-between w-full">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xl">
+                                {countryMaps[countries[0]].flag}
+                              </span>
+                              <span>{countries[0]}</span>
+                            </div>
+                            <span>→</span>
+                            <div className="flex items-center gap-2">
+                              <span>{countries[1]}</span>
+                              <span className="text-xl">
+                                {countryMaps[countries[1]].flag}
+                              </span>
+                            </div>
+                          </TooltipTrigger>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </Link>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
           <h2 className="text-lg text-center">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
         </div>
       </div>
