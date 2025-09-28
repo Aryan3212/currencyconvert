@@ -15,9 +15,8 @@ function PosthogInit() {
 }
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    // we will register it after the page complete the load
-    navigator.serviceWorker.register("/sw.js");
+  navigator.serviceWorker.register("/sw.js").catch((error) => {
+    console.error("Service worker registration failed", error);
   });
 }
 
