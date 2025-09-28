@@ -328,29 +328,50 @@ export const loader: LoaderFunction = async ({ params }) => {
     timestamp: number;
   } | null;
 
+  const fallbackCache = (await redis.get("currency_response_fallback")) as {
+    currencyMap: Currency;
+    timestamp: number;
+  } | null;
+
   let currencyMap;
   let timestamp;
   if (cacheResponse) {
     currencyMap = cacheResponse.currencyMap;
     timestamp = cacheResponse.timestamp;
   } else {
-    const response = await fetch(
-      `https://data.fixer.io/api/latest?access_key=${process.env.FIXER_ACCESS_KEY}&format=1`
-    );
+    try {
+      const response = await fetch(
+        `https://data.fixer.io/api/latest?access_key=${process.env.FIXER_API_KEY}&format=1`
+      );
 
-    let currencyList: FixerResponse = await response.json();
-    if (currencyList.success === false) {
-      currencyList = fallbackApiResponse();
-    }
-    currencyMap = parseCurrencies(currencyList);
-    timestamp = currencyList.timestamp;
-    await redis.set(
-      "currency_response",
-      JSON.stringify({ currencyMap, timestamp: timestamp }),
-      {
-        ex: 32400,
+      let currencyList: FixerResponse = await response.json();
+      if (currencyList.success === false) {
+        throw new Error("Fixer API returned unsuccessful response");
       }
-    );
+      currencyMap = parseCurrencies(currencyList);
+      timestamp = currencyList.timestamp;
+      await redis.set(
+        "currency_response",
+        JSON.stringify({ currencyMap, timestamp }),
+        {
+          ex: 32400,
+        }
+      );
+
+      await redis.set(
+        "currency_response_fallback",
+        JSON.stringify({ currencyMap, timestamp })
+      );
+    } catch (error) {
+      if (fallbackCache) {
+        currencyMap = fallbackCache.currencyMap;
+        timestamp = fallbackCache.timestamp;
+      } else {
+        const fallbackData = fallbackApiResponse();
+        currencyMap = parseCurrencies(fallbackData);
+        timestamp = fallbackData.timestamp;
+      }
+    }
   }
 
   const validatedCurrencies = validateCurrencyParams(params.path, currencyMap);
