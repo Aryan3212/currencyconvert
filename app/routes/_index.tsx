@@ -484,7 +484,7 @@ export default function index() {
         {footerLinks.map((link) => (
           <div key={link.href} className="basis-1/4 align-center gap-4">
             <Link to={link.href} className="block p-4">
-              <div className="items-center justify-center">
+              <div className="items-center justify-center text-center">
                 <span>{link.text}</span>
               </div>
             </Link>
@@ -546,7 +546,7 @@ export default function index() {
               Save to home screen
             </span>
           </div>
-          <h2 className="text-lg">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
+          <h2 className="text-lg text-center">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
         </div>
       </div>
      </div>

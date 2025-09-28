@@ -444,12 +444,12 @@ export default function index() {
   return (
     <>
       {isHydrated && <PWAStatus />}
-      <div className="w-[98%] max-w-[52rem] mx-auto mt-4">
+      <div className="w-[98%] max-w-6xl mx-auto mt-4">
         <Link to="/" className="text-blue-600 hover:text-blue-800">
           ← Go back to Saved Calculation
         </Link>
       </div>
-      <Card className="w-[98%] max-w-[52rem] mx-auto mt-4">
+      <Card className="w-[98%] max-w-6xl mx-auto mt-4 mb-[15rem]">
         <CardHeader>
           <div className="flex items-center gap-3 flex-wrap">
             <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
@@ -475,7 +475,33 @@ export default function index() {
           </div>)}
         </CardFooter>
       </Card>
-      <div className="w-[98%] max-w-[52rem] mx-auto mt-8 mb-8">
+      <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
+        <h2 className="text-lg basis-full font-semibold mb-2 text-center">Useful Links</h2>
+        {footerLinks.map((link) => (
+          <div key={link.href} className="basis-1/4 align-center gap-4">
+            <Link to={link.href} className="block p-4">
+              <div className="items-center justify-center text-center">
+                <span className="text-center">{link.text}</span>
+              </div>
+            </Link>
+          </div>
+        ))}
+        <div className="mt-10 space-y-2 basis-full">
+          <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-4">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Works offline
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Install as app
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              Save to home screen
+            </span>
+          </div>
+          <div className="w-[98%] max-w-[52rem] mx-auto mt-8 mb-8">
         <h2 className="text-2xl font-semibold mb-4">
           Popular Currency Conversions
         </h2>
@@ -517,33 +543,7 @@ export default function index() {
           ))}
         </div>
       </div>
-      <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
-        <h2 className="text-lg basis-full font-semibold mb-2 text-center">Useful Links</h2>
-        {footerLinks.map((link) => (
-          <div key={link.href} className="basis-1/4 align-center gap-4">
-            <Link to={link.href} className="block p-4">
-              <div className="items-center justify-center">
-                <span>{link.text}</span>
-              </div>
-            </Link>
-          </div>
-        ))}
-        <div className="mt-10 space-y-2 basis-full">
-          <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-4">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              Works offline
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              Install as app
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-              Save to home screen
-            </span>
-          </div>
-          <h2 className="text-lg">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
+          <h2 className="text-lg text-center">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
         </div>
       </div>
     </>
