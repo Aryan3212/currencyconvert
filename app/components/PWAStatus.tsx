@@ -3,16 +3,27 @@ import { Download, Smartphone } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+};
+
 export default function PWAStatus() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   useEffect(() => {
-    // Debug: Check if we're in a PWA-capable environment
+    const isStandalone =
+      ("standalone" in window.navigator && (window.navigator as any).standalone) ||
+      window.matchMedia("(display-mode: standalone)").matches;
+
+    if (isStandalone) {
+      return;
+    }
 
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
       setShowInstallPrompt(true);
     };
 
@@ -24,17 +35,8 @@ export default function PWAStatus() {
       setDeferredPrompt(null);
     });
 
-    // Fallback: Show install prompt immediately in development/testing
-    // This helps with testing and browsers that don't support the event
-    const fallbackTimer = setTimeout(() => {
-      if (!deferredPrompt && !showInstallPrompt) {
-        setShowInstallPrompt(true);
-      }
-    }, 500); // Reduced to 500ms for better UX
-
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      clearTimeout(fallbackTimer);
     };
   }, []);
 
