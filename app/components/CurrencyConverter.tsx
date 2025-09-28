@@ -272,9 +272,9 @@ export default function CurrencyConverter({
     </div>
   ) : (
     <div className="flex flex-wrap gap-8">
-      <div className="flex-1 basis-[60%] space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold">Currency Converter</h2>
+      <div className="flex-1 min-w-0 basis-full lg:basis-[60%] space-y-4">
+        <div className="flex flex-wrap gap-2 justify-between items-center">
+          <h2 className="text-lg basis-52 font-semibold">Currency Converter</h2>
           <Button
             variant="outline"
             size="sm"
@@ -298,7 +298,7 @@ export default function CurrencyConverter({
                 {currency.name}
               </span>
             </div>
-            <div className="w-full flex bg-transparent border-b border-input">
+            <div className="w-full flex items-center gap-2 bg-transparent border-b border-input pr-12">
              <span className="font-bold inline mr-1 text-2xl" aria-label={currency.name}>
               {currency.symbol}
             </span>
@@ -314,7 +314,7 @@ export default function CurrencyConverter({
                 }
                 }
               }
-              className="basis-5/6 text-3xl font-medium focus:outline-none focus:border-primary transition-colors"
+              className="flex-1 min-w-0 text-3xl font-medium focus:outline-none focus:border-primary transition-colors"
               name={`Amount in ${currency.name}`}
               aria-label={`Amount in ${currency.name}`}
             />
@@ -322,7 +322,7 @@ export default function CurrencyConverter({
               variant="ghost"
               size="icon"
               onClick={() => removeCurrency(index)}
-              className="absolute right-0 top-8 text-muted-foreground hover:text-foreground hover:bg-red-100 hover:text-red-500"
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground hover:bg-red-100 hover:text-red-500"
               aria-label={`Remove ${currency.name}`}
             >
               <XIcon className="h-6 w-6" aria-label="Remove Currency" />
@@ -375,7 +375,7 @@ export default function CurrencyConverter({
         </Popover>
       </div>
 
-      <div className="basis-72 space-y-4">
+      <div className="w-full lg:basis-72 space-y-4">
         <h2 className="text-lg font-semibold">Saved Conversions</h2>
         {savedConversions.length === 0 ? (
           <p className="text-muted-foreground text-center py-8">
