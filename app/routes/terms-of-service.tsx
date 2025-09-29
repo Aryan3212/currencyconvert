@@ -83,137 +83,193 @@ export const meta: MetaFunction = ({ params }) => {
 
 export default function TermsOfService() {
   return (<>
-    <Card className="w-full max-w-2xl mx-auto mt-8 p-6 bg-white shadow-lg rounded-lg">
-      <div className="w-[98%] max-w-[52rem] mx-auto mt-4">
-        <Link to="/" className="text-blue-600 hover:text-blue-800">
-          ← Go back to Home{" "}
-        </Link>
-      </div>
+    <div className="w-[98%] max-w-6xl mx-auto mt-4 mb-4">
+      <Link to="/" className="text-primary hover:text-primary/80 font-medium inline-flex items-center gap-2 transition-colors">
+        ← Go back to Home
+      </Link>
+    </div>
+    <Card className="w-[98%] max-w-6xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-4xl font-bold text-gray-800">
+        <CardTitle className="text-4xl font-bold">
           Terms of Service
         </CardTitle>
       </CardHeader>
-      <CardContent className="prose dark:prose-invert text-gray-700">
-        <h2 className="text-2xl font-semibold mt-4">1. Acceptance of Terms</h2>
-        <p>
-          By accessing and using Currency Converter Pro ("the Service"), you
-          accept and agree to be bound by these Terms of Service. If you do not
-          agree to these terms, please do not use the Service.
-        </p>
+      <CardContent className="prose max-w-none">
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
+              1. Acceptance of Terms
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              By accessing and using Currency Converter Pro ("the Service"), you
+              accept and agree to be bound by these Terms of Service. If you do not
+              agree to these terms, please do not use the Service.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">2. Use of Service</h2>
-        <p>
-          The Service provides currency conversion calculations based on current
-          exchange rates. While we strive to provide accurate information, we
-          cannot guarantee the accuracy of all conversions and rates.
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></span>
+              2. Use of Service
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              The Service provides currency conversion calculations based on current
+              exchange rates. While we strive to provide accurate information, we
+              cannot guarantee the accuracy of all conversions and rates.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">3. Disclaimer</h2>
-        <p>
-          The currency conversion rates provided are for informational purposes
-          only. We do not guarantee their accuracy and they should not be relied
-          upon for financial transactions without independent verification.
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0"></span>
+              3. Disclaimer
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              The currency conversion rates provided are for informational purposes
+              only. We do not guarantee their accuracy and they should not be relied
+              upon for financial transactions without independent verification.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">
-          4. Service Modifications
-        </h2>
-        <p>
-          We reserve the right to modify or discontinue, temporarily or
-          permanently, the Service with or without notice. We shall not be
-          liable to you or any third party for any modification, suspension, or
-          discontinuance of the Service.
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0"></span>
+              4. Service Modifications
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              We reserve the right to modify or discontinue, temporarily or
+              permanently, the Service with or without notice. We shall not be
+              liable to you or any third party for any modification, suspension, or
+              discontinuance of the Service.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">5. User Conduct</h2>
-        <p>You agree not to:</p>
-        <ul className="list-disc list-inside ml-5">
-          <li>Use the Service for any unlawful purpose</li>
-          <li>Attempt to gain unauthorized access to the Service</li>
-          <li>Interfere with or disrupt the Service or servers</li>
-          <li>Collect any user information without authorization</li>
-        </ul>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-pink-500 rounded-full flex-shrink-0"></span>
+              5. User Conduct
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5 mb-3">You agree not to:</p>
+            <ul className="ml-8 space-y-2">
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                Use the Service for any unlawful purpose
+              </li>
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                Attempt to gain unauthorized access to the Service
+              </li>
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                Interfere with or disrupt the Service or servers
+              </li>
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                Collect any user information without authorization
+              </li>
+            </ul>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">6. Privacy</h2>
-        <p>
-          Your use of the Service is also governed by our{" "}
-          <a href="/privacy-policy" className="text-blue-600 hover:underline">
-            Privacy Policy
-          </a>
-          . Please review our Privacy Policy to understand our practices.
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></span>
+              6. Privacy
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              Your use of the Service is also governed by our{" "}
+              <Link to="/privacy-policy" className="text-primary underline-offset-4 hover:underline font-medium">
+                Privacy Policy
+              </Link>
+              . Please review our Privacy Policy to understand our practices.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">7. Changes to Terms</h2>
-        <p>
-          We reserve the right to update these Terms of Service at any time.
-          Continued use of the Service after any changes constitutes acceptance
-          of the new Terms of Service.
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0"></span>
+              7. Changes to Terms
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              We reserve the right to update these Terms of Service at any time.
+              Continued use of the Service after any changes constitutes acceptance
+              of the new Terms of Service.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">8. Contact</h2>
-        <p>
-          If you have any questions about these Terms of Service, please contact
-          us through our{" "}
-          <a href="/contact" className="text-blue-600 hover:underline">
-            contact page
-          </a>
-          .
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-indigo-500 rounded-full flex-shrink-0"></span>
+              8. Contact
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              If you have any questions about these Terms of Service, please contact
+              us through our{" "}
+              <Link to="/contact" className="text-primary underline-offset-4 hover:underline font-medium">
+                contact page
+              </Link>
+              .
+            </p>
+          </div>
 
-        <p className="text-sm mt-8 text-gray-500">
-          Last updated: {new Date().toLocaleDateString()}
-        </p>
+          <div className="pt-6 border-t border-border/40">
+            <p className="text-sm text-muted-foreground text-center">
+              Last updated: {new Date().toLocaleDateString()}
+            </p>
+          </div>
+        </div>
       </CardContent>
     </Card>
-    <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
-      <h2 className="text-lg basis-full font-semibold mb-2 text-center">Useful Links</h2>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Home</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/about" className="block p-4">
-          <div className="items-center justify-center">
-            <span>About</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/contact" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Contact</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/privacy-policy" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Privacy Policy</span>
-          </div>
-        </Link>
-      </div>
-      <div className="mt-10 space-y-2 basis-full">
-        <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-4">
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-            Works offline
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-            Install as app
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-            Save to home screen
-          </span>
+    {/* Footer Section */}
+    <Card className="w-[98%] max-w-6xl mx-auto mt-8 mb-8">
+      <CardHeader>
+        <CardTitle className="text-lg text-center">Useful Links</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <Link to="/" className="text-primary hover:underline underline-offset-4">
+            Home
+          </Link>
+          <Link to="/about" className="text-primary hover:underline underline-offset-4">
+            About
+          </Link>
+          <Link to="/contact" className="text-primary hover:underline underline-offset-4">
+            Contact
+          </Link>
+          <Link to="/privacy-policy" className="text-primary hover:underline underline-offset-4">
+            Privacy Policy
+          </Link>
         </div>
-        <h2 className="text-lg">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
-      </div>
-    </div>
+
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-6 justify-center">
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Works offline
+            </span>
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Install as app
+            </span>
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              Save to home screen
+            </span>
+          </div>
+          <div className="text-center text-muted-foreground">
+            Created to make your life easier by{" "}
+            <a
+              className="text-primary underline-offset-4 hover:underline font-medium"
+              href="https://www.aryanrahman.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Aryan Rahman
+            </a>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
     </>
   );
 }

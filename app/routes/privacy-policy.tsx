@@ -82,141 +82,205 @@ export const meta: MetaFunction = ({ params }) => {
 
 export default function PrivacyPolicy() {
   return (<>
-    <Card className="w-full max-w-2xl mx-auto mt-4 p-6 bg-white shadow-lg rounded-lg">
-      <div className="w-[98%] max-w-[52rem] mx-auto mt-4">
-        <Link to="/" className="text-blue-600 hover:text-blue-800">
-          ← Go back to Home{" "}
-        </Link>
-      </div>
+    <div className="w-[98%] max-w-6xl mx-auto mt-4 mb-4">
+      <Link to="/" className="text-primary hover:text-primary/80 font-medium inline-flex items-center gap-2 transition-colors">
+        ← Go back to Home
+      </Link>
+    </div>
+    <Card className="w-[98%] max-w-6xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-4xl font-bold text-gray-800">
+        <CardTitle className="text-4xl font-bold">
           Privacy Policy
         </CardTitle>
       </CardHeader>
-      <CardContent className="prose dark:prose-invert text-gray-700">
-        <h2 className="text-2xl font-semibold mt-4">
-          1. Information We Collect
-        </h2>
-        <p>
-          Currency Converter Pro collects minimal information to provide and
-          improve our Service. We do not collect any personally identifiable
-          information unless explicitly provided by you through our contact
-          form.
-        </p>
+      <CardContent className="prose max-w-none">
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></span>
+              1. Information We Collect
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              Currency Converter Pro collects minimal information to provide and
+              improve our Service. We do not collect any personally identifiable
+              information unless explicitly provided by you through our contact
+              form.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">2. Usage Data</h2>
-        <p>We may collect anonymous usage data including:</p>
-        <ul className="list-disc list-inside ml-5">
-          <li>Browser type and version</li>
-          <li>The pages of our Service that you visit</li>
-          <li>The time and date of your visit</li>
-          <li>The time spent on those pages</li>
-        </ul>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></span>
+              2. Usage Data
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5 mb-3">We may collect anonymous usage data including:</p>
+            <ul className="ml-8 space-y-2">
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                Browser type and version
+              </li>
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                The pages of our Service that you visit
+              </li>
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                The time and date of your visit
+              </li>
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                The time spent on those pages
+              </li>
+            </ul>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">3. Cookies</h2>
-        <p>
-          We use essential cookies to ensure the proper functioning of our
-          website. These cookies do not collect any personal information and are
-          strictly necessary for the Service to work correctly.
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0"></span>
+              3. Cookies
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              We use essential cookies to ensure the proper functioning of our
+              website. These cookies do not collect any personal information and are
+              strictly necessary for the Service to work correctly.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">
-          4. How We Use Your Information
-        </h2>
-        <p>Any information we collect is used to:</p>
-        <ul className="list-disc list-inside ml-5">
-          <li>Provide and maintain our Service</li>
-          <li>Improve our Service</li>
-          <li>Monitor the usage of our Service</li>
-          <li>Detect and address technical issues</li>
-        </ul>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0"></span>
+              4. How We Use Your Information
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5 mb-3">Any information we collect is used to:</p>
+            <ul className="ml-8 space-y-2">
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                Provide and maintain our Service
+              </li>
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                Improve our Service
+              </li>
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                Monitor the usage of our Service
+              </li>
+              <li className="flex items-start gap-3 text-muted-foreground">
+                <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full mt-2 flex-shrink-0"></span>
+                Detect and address technical issues
+              </li>
+            </ul>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">5. Data Security</h2>
-        <p>
-          We implement appropriate security measures to protect against
-          unauthorized access, alteration, disclosure, or destruction of your
-          information.
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-pink-500 rounded-full flex-shrink-0"></span>
+              5. Data Security
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              We implement appropriate security measures to protect against
+              unauthorized access, alteration, disclosure, or destruction of your
+              information.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">6. Third-Party Services</h2>
-        <p>
-          Our Service may contain links to other websites that are not operated
-          by us. We have no control over and assume no responsibility for the
-          content, privacy policies, or practices of any third-party sites or
-          services.
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0"></span>
+              6. Third-Party Services
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              Our Service may contain links to other websites that are not operated
+              by us. We have no control over and assume no responsibility for the
+              content, privacy policies, or practices of any third-party sites or
+              services.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">
-          7. Changes to This Privacy Policy
-        </h2>
-        <p>
-          We may update our Privacy Policy from time to time. We will notify you
-          of any changes by posting the new Privacy Policy on this page.
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-teal-500 rounded-full flex-shrink-0"></span>
+              7. Changes to This Privacy Policy
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              We may update our Privacy Policy from time to time. We will notify you
+              of any changes by posting the new Privacy Policy on this page.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-4">8. Contact Us</h2>
-        <p>
-          If you have any questions about this Privacy Policy, please contact us
-          through our{" "}
-          <a href="/contact" className="text-blue-500 hover:underline">
-            contact page
-          </a>
-          .
-        </p>
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-2 h-2 bg-indigo-500 rounded-full flex-shrink-0"></span>
+              8. Contact Us
+            </h2>
+            <p className="text-muted-foreground leading-relaxed ml-5">
+              If you have any questions about this Privacy Policy, please contact us
+              through our{" "}
+              <Link to="/contact" className="text-primary underline-offset-4 hover:underline font-medium">
+                contact page
+              </Link>
+              .
+            </p>
+          </div>
 
-        <p className="text-sm mt-8 text-gray-500">
-          Last updated: {new Date().toLocaleDateString()}
-        </p>
+          <div className="pt-6 border-t border-border/40">
+            <p className="text-sm text-muted-foreground text-center">
+              Last updated: {new Date().toLocaleDateString()}
+            </p>
+          </div>
+        </div>
       </CardContent>
     </Card>
-    <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
-      <h2 className="text-lg basis-full font-semibold mb-2 text-center">Useful Links</h2>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Home</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/about" className="block p-4">
-          <div className="items-center justify-center">
-            <span>About</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/contact" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Contact</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/terms-of-service" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Terms of Service</span>
-          </div>
-        </Link>
-      </div>
-      <div className="mt-10 space-y-2 basis-full">
-        <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-4">
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-            Works offline
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-            Install as app
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-            Save to home screen
-          </span>
+    {/* Footer Section */}
+    <Card className="w-[98%] max-w-6xl mx-auto mt-8 mb-8">
+      <CardHeader>
+        <CardTitle className="text-lg text-center">Useful Links</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <Link to="/" className="text-primary hover:underline underline-offset-4">
+            Home
+          </Link>
+          <Link to="/about" className="text-primary hover:underline underline-offset-4">
+            About
+          </Link>
+          <Link to="/contact" className="text-primary hover:underline underline-offset-4">
+            Contact
+          </Link>
+          <Link to="/terms-of-service" className="text-primary hover:underline underline-offset-4">
+            Terms of Service
+          </Link>
         </div>
-        <h2 className="text-lg">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
-      </div>
-    </div>
+
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-6 justify-center">
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Works offline
+            </span>
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Install as app
+            </span>
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              Save to home screen
+            </span>
+          </div>
+          <div className="text-center text-muted-foreground">
+            Created to make your life easier by{" "}
+            <a
+              className="text-primary underline-offset-4 hover:underline font-medium"
+              href="https://www.aryanrahman.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Aryan Rahman
+            </a>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
     </>
   );
 }

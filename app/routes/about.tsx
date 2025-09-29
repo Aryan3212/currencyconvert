@@ -83,106 +83,125 @@ export const meta: MetaFunction = ({ params }) => {
 export default function About() {
   return (
     <>
-    <Card className="w-[98%] max-w-[52rem] mx-auto mt-4 p-6 bg-white shadow-lg rounded-lg">
-      <div className="w-[98%] max-w-[52rem] mx-auto mt-4">
-        <Link to="/" className="text-blue-600 hover:text-blue-800">
-          ← Go back to Home{" "}
-        </Link>
-      </div>
+    <div className="w-[98%] max-w-6xl mx-auto mt-4 mb-4">
+      <Link to="/" className="text-primary hover:text-primary/80 font-medium inline-flex items-center gap-2 transition-colors">
+        ← Go back to Home
+      </Link>
+    </div>
+    <Card className="w-[98%] max-w-6xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-4xl font-bold text-gray-800">
+        <CardTitle className="text-4xl font-bold">
           About Currency Converter Pro
         </CardTitle>
       </CardHeader>
-      <CardContent className="prose dark:prose-invert text-gray-700">
+      <CardContent className="prose max-w-none">
         <p className="mb-4">
           Currency Converter Pro is a fast, reliable, and easy-to-use currency
           conversion tool that helps you convert between major world currencies
           in real-time.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-2">Our Features</h2>
-        <ul className="list-disc list-inside mb-4">
-          <li>Real-time exchange rates updated regularly</li>
-          <li>Support for major world currencies</li>
-          <li>Simple and intuitive interface</li>
-          <li>Quick access to popular currency pairs</li>
-          <li>Mobile-friendly design</li>
-        </ul>
+        <div className="space-y-6">
+          <h2 className="text-2xl font-semibold">Our Features</h2>
+          <ul className="space-y-2 list-none">
+            <li className="flex items-start gap-3">
+              <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+              Real-time exchange rates updated regularly
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+              Support for major world currencies
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
+              Simple and intuitive interface
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></span>
+              Quick access to popular currency pairs
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="w-2 h-2 bg-pink-500 rounded-full mt-2 flex-shrink-0"></span>
+              Mobile-friendly design
+            </li>
+          </ul>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-2">How It Works</h2>
-        <p className="mb-4">
-          We fetch the latest exchange rates from reliable financial data
-          providers to ensure accuracy in our conversions. Our rates are updated
-          multiple times per day to reflect the most current market values.
-        </p>
+          <h2 className="text-2xl font-semibold">How It Works</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            We fetch the latest exchange rates from reliable financial data
+            providers to ensure accuracy in our conversions. Our rates are updated
+            multiple times per day to reflect the most current market values.
+          </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-2">Popular Currencies</h2>
-        <p className="mb-4">
-          We support all major world currencies including EUR, USD, GBP, CAD,
-          TRY, THB, MXN, MYR, SAR, INR, CNY, BRL, AED and many more. Whether
-          you're traveling, doing business internationally, or just keeping
-          track of exchange rates, we've got you covered.
-        </p>
+          <h2 className="text-2xl font-semibold">Popular Currencies</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            We support all major world currencies including EUR, USD, GBP, CAD,
+            TRY, THB, MXN, MYR, SAR, INR, CNY, BRL, AED and many more. Whether
+            you're traveling, doing business internationally, or just keeping
+            track of exchange rates, we've got you covered.
+          </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-2">Contact Us</h2>
-        <p>
-          Have questions or suggestions? We'd love to hear from you. Visit our{" "}
-          <a href="/contact" className="text-blue-500 hover:underline">
-            contact page
-          </a>{" "}
-          to get in touch with us.
-        </p>
+          <h2 className="text-2xl font-semibold">Contact Us</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            Have questions or suggestions? We'd love to hear from you. Visit our{" "}
+            <Link to="/contact" className="text-primary underline-offset-4 hover:underline font-medium">
+              contact page
+            </Link>{" "}
+            to get in touch with us.
+          </p>
+        </div>
       </CardContent>
     </Card>
-    <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
-      <h2 className="text-lg basis-full font-semibold mb-2 text-center">Useful Links</h2>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Home</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/contact" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Contact</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/terms-of-service" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Terms of Service</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/privacy-policy" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Privacy Policy</span>
-          </div>
-        </Link>
-      </div>
-      <div className="mt-10 space-y-2 basis-full">
-        <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-4">
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-            Works offline
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-            Install as app
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-            Save to home screen
-          </span>
+    {/* Footer Section */}
+    <Card className="w-[98%] max-w-6xl mx-auto mt-8 mb-8">
+      <CardHeader>
+        <CardTitle className="text-lg text-center">Useful Links</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <Link to="/" className="text-primary hover:underline underline-offset-4">
+            Home
+          </Link>
+          <Link to="/contact" className="text-primary hover:underline underline-offset-4">
+            Contact
+          </Link>
+          <Link to="/terms-of-service" className="text-primary hover:underline underline-offset-4">
+            Terms of Service
+          </Link>
+          <Link to="/privacy-policy" className="text-primary hover:underline underline-offset-4">
+            Privacy Policy
+          </Link>
         </div>
-        <h2 className="text-lg">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
-      </div>
-    </div>
+
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-6 justify-center">
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Works offline
+            </span>
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Install as app
+            </span>
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              Save to home screen
+            </span>
+          </div>
+          <div className="text-center text-muted-foreground">
+            Created to make your life easier by{" "}
+            <a
+              className="text-primary underline-offset-4 hover:underline font-medium"
+              href="https://www.aryanrahman.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Aryan Rahman
+            </a>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
     </>
   );
 }

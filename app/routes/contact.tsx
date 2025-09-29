@@ -83,76 +83,110 @@ export const meta: MetaFunction = ({ params }) => {
 export default function Contact() {
   return (
     <>
-    <Card className="w-[98%] max-w-[52rem] mx-auto mt-4">
-      <div className="w-[98%] max-w-[52rem] mx-auto mt-4">
-        <Link to="/" className="text-blue-600 hover:text-blue-800">
-          ← Go back to Home{" "}
-        </Link>
-      </div>
+    <div className="w-[98%] max-w-6xl mx-auto mt-4 mb-4">
+      <Link to="/" className="text-primary hover:text-primary/80 font-medium inline-flex items-center gap-2 transition-colors">
+        ← Go back to Home
+      </Link>
+    </div>
+    <Card className="w-[98%] max-w-6xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-4xl">Contact Us</CardTitle>
+        <CardTitle className="text-4xl font-bold">Contact Us</CardTitle>
       </CardHeader>
-      <CardContent className="prose dark:prose-invert">
-        <p>
-          We apologize, but our contact form is currently under development. We
-          are working hard to implement a secure and reliable way for you to get
-          in touch with us.
-        </p>
-
-        <p>
-          Please check back later. We appreciate your patience and
-          understanding.
-        </p>
+      <CardContent className="prose max-w-none">
+        <div className="space-y-6">
+          <div className="p-6 border border-border/40 rounded-lg bg-muted/20">
+            <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              We don't have a contact form yet.
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">
+              In the meantime, you can find me at{" "}
+              <a
+                href="https://www.aryanrahman.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline-offset-4 hover:underline font-medium"
+              >
+                aryanrahman.dev
+              </a>
+              . Please check back later for the contact form. Appreciate your patience and
+              understanding.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="p-4 border border-border/40 rounded-lg">
+              <h3 className="font-semibold mb-2 flex items-center gap-2">
+                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                Feature Requests
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Have an idea for a new feature? We'd love to hear your suggestions.
+              </p>
+            </div>
+            <div className="p-4 border border-border/40 rounded-lg">
+              <h3 className="font-semibold mb-2 flex items-center gap-2">
+                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                Bug Reports
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Found an issue? Let us know so we can fix it quickly.
+              </p>
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
-    <div className="flex flex-wrap w-full bg-gray-100 p-4 mt-8">
-      <h2 className="text-lg basis-full font-semibold mb-2 text-center">Useful Links</h2>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Home</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/about" className="block p-4">
-          <div className="items-center justify-center">
-            <span>About</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/terms-of-service" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Terms of Service</span>
-          </div>
-        </Link>
-      </div>
-      <div className="basis-1/4 align-center gap-4">
-        <Link to="/privacy-policy" className="block p-4">
-          <div className="items-center justify-center">
-            <span>Privacy Policy</span>
-          </div>
-        </Link>
-      </div>
-      <div className="mt-10 space-y-2 basis-full">
-        <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-4">
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-            Works offline
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-            Install as app
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-            Save to home screen
-          </span>
+    {/* Footer Section */}
+    <Card className="w-[98%] max-w-6xl mx-auto mt-8 mb-8">
+      <CardHeader>
+        <CardTitle className="text-lg text-center">Useful Links</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <Link to="/" className="text-primary hover:underline underline-offset-4">
+            Home
+          </Link>
+          <Link to="/about" className="text-primary hover:underline underline-offset-4">
+            About
+          </Link>
+          <Link to="/terms-of-service" className="text-primary hover:underline underline-offset-4">
+            Terms of Service
+          </Link>
+          <Link to="/privacy-policy" className="text-primary hover:underline underline-offset-4">
+            Privacy Policy
+          </Link>
         </div>
-        <h2 className="text-lg">Created to make your life easier by <a className="text-blue-500 underline" href="https://www.aryanrahman.dev">Aryan Rahman</a></h2>
-      </div>
-    </div>
+
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-6 justify-center">
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              Works offline
+            </span>
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Install as app
+            </span>
+            <span className="flex items-center gap-2 text-sm font-medium">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              Save to home screen
+            </span>
+          </div>
+          <div className="text-center text-muted-foreground">
+            Created to make your life easier by{" "}
+            <a
+              className="text-primary underline-offset-4 hover:underline font-medium"
+              href="https://www.aryanrahman.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Aryan Rahman
+            </a>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
     </>
   );
 }
