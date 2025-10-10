@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "@remix-run/react";
 import CurrencyConverter from "~/components/CurrencyConverter";
-import PWAStatus from "~/components/PWAStatus";
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import { countryMaps } from "~/lib/constants";
 import { Currency } from "~/lib/types";
 import { TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Tooltip, TooltipContent } from "~/components/ui/tooltip";
+import PWAStatus from "./PWAStatus";
 
 type CurrencyCode = keyof typeof countryMaps;
 
@@ -74,33 +74,20 @@ export default function CurrencyPage({
   currencyMap,
   timestamp,
   validatedCurrencies,
-  isHome = false,
   onPopularConversionClick,
 }: CurrencyPageProps) {
   const navigate = useNavigate();
   const converterRef = React.useRef<HTMLDivElement>(null);
   
   const [isHydrated, setIsHydrated] = React.useState(!isHydrating);
-  const [isOnline, setIsOnline] = React.useState(
-    typeof navigator !== "undefined" ? navigator.onLine : true
-  );
-
   React.useEffect(() => {
     isHydrating = false;
     setIsHydrated(true);
-  }, []);
-
-  React.useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    const updateStatus = () => setIsOnline(navigator.onLine);
-    window.addEventListener("online", updateStatus);
-    window.addEventListener("offline", updateStatus);
-    return () => {
-      window.removeEventListener("online", updateStatus);
-      window.removeEventListener("offline", updateStatus);
-    };
+    localStorage.setItem('currencyData', JSON.stringify({
+      currencyMap,
+      timestamp,
+      validatedCurrencies
+    }));
   }, []);
 
   const handlePopularPairClick = (fromCode: string, toCode: string) => {
@@ -122,10 +109,10 @@ export default function CurrencyPage({
   return (
     <>
       {isHydrated && <PWAStatus />}
-      <Card className="w-[98%] max-w-6xl mx-auto mt-4 mb-[15rem]" ref={converterRef}>
+      <Card className="w-[98%] max-w-6xl mx-auto mt-4 mb-[15rem]">
         <CardHeader>
           <div className="flex items-center gap-3 flex-wrap">
-            <CardTitle className="text-4xl">Currency Converter Pro</CardTitle>
+            <CardTitle className="text-4xl" ref={converterRef}>Currency Converter Pro</CardTitle>
             <span className="flex items-center gap-1 text-xs bg-green-50 px-2 py-1 rounded-full border border-green-200">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
               Works offline
@@ -204,6 +191,7 @@ export default function CurrencyPage({
           <div className="flex flex-wrap justify-center gap-6 mb-8">
             {footerLinks.map((link) => (
               <Link
+                rel="prefetch"
                 key={link.href}
                 to={link.href}
                 className="text-primary hover:underline underline-offset-4"

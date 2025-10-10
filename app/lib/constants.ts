@@ -347,7 +347,7 @@ export const countryMaps = {
     "INR": {
         "name": "Indian Rupee",
         "flag": "🇮🇳",
-        "symbol": "টকা"
+        "symbol": "₹"
     },
     "ILS": {
         "name": "Israeli New Sheqel",

@@ -1,5 +1,5 @@
 import { LoaderFunction } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { ClientLoaderFunctionArgs, useLoaderData, useNavigate } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
 import type { LinksFunction } from "@remix-run/node";
 import React from "react";
@@ -75,6 +75,23 @@ export const meta: MetaFunction = ({ params }) => {
 export const loader: LoaderFunction = async ({ params }) => {
   return await fetchCurrencyData({ paramsPath: params.path });
 };
+
+export const clientLoader = async ({
+  serverLoader,
+}: ClientLoaderFunctionArgs) => {
+  try {
+  const serverData = await serverLoader();
+
+  return serverData;
+  } catch {
+    const data = localStorage.getItem('currencyData');
+    if (data && typeof data === 'string') {
+      return JSON.parse(data);
+    }
+    throw new Error('No data available, please connect to the internet');
+  }
+};
+
 export default function Index() {
   const data = useLoaderData<CurrencyDataResult>();
   const navigate = useNavigate();

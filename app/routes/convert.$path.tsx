@@ -1,8 +1,7 @@
 import { LoaderFunction } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { ClientLoaderFunctionArgs, useLoaderData, useNavigate } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
 import type { LinksFunction } from "@remix-run/node";
-import React from "react";
 import CurrencyPage from "~/components/CurrencyPage";
 import { fetchCurrencyData, type CurrencyDataResult } from "~/lib/currency.server";
 
@@ -77,21 +76,27 @@ export const loader: LoaderFunction = async ({ params }) => {
   return await fetchCurrencyData({ paramsPath: params.path });
 };
 
+export const clientLoader = async ({
+  serverLoader,
+}: ClientLoaderFunctionArgs) => {
+  try {
+  const serverData = await serverLoader();
+
+  return serverData;
+  } catch {
+    const data = localStorage.getItem('currencyData');
+    if (data && typeof data === 'string') {
+      return JSON.parse(data);
+    }
+    throw new Error('No data available, please connect to the internet');
+  }
+};
+
+
+
 export default function ConvertPath() {
   const data = useLoaderData<CurrencyDataResult>();
   const navigate = useNavigate();
-  const converterRef = React.useRef<HTMLDivElement>(null);
-
-  // Handle scroll to converter on page load if we navigated from popular conversions
-  React.useEffect(() => {
-    // Small delay to ensure page is rendered
-    const timer = setTimeout(() => {
-      if (converterRef.current) {
-        converterRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handlePopularConversionClick = (fromCode: string, toCode: string) => {
     // Navigate to the new URL
@@ -99,15 +104,13 @@ export default function ConvertPath() {
   };
 
   return (
-    <div ref={converterRef}>
-      <CurrencyPage
-        currencyMap={data.currencyMap}
-        timestamp={data.timestamp}
-        validatedCurrencies={data.validatedCurrencies}
-        isHome={false}
-        onPopularConversionClick={handlePopularConversionClick}
-      />
-    </div>
+    <CurrencyPage
+      currencyMap={data.currencyMap}
+      timestamp={data.timestamp}
+      validatedCurrencies={data.validatedCurrencies}
+      isHome={false}
+      onPopularConversionClick={handlePopularConversionClick}
+    />
   );
 }
 

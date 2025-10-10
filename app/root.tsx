@@ -44,6 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
         {isHydrated && (
         <GoogleAds />)}
+        <script src="/registerSW.js"></script>
       </head>
       <body>
         {children}
