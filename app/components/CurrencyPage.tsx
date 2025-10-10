@@ -158,7 +158,7 @@ export default function CurrencyPage({
                           {countryMaps[countries[0]].name} to{" "}
                           {countryMaps[countries[1]].name}
                         </TooltipContent>
-                        <TooltipTrigger className="flex items-center justify-between w-full">
+                        <TooltipTrigger className="flex flex-wrap items-center justify-between w-full">
                           <div className="flex items-center gap-2">
                             <span className="text-xl">
                               {countryMaps[countries[0]].flag}
