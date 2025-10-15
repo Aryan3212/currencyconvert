@@ -20,11 +20,7 @@ export function setupRoutes() {
         ({ request, sameOrigin, url }) => request.destination === 'document' && sameOrigin && staticRoutesRegexp.test(url.pathname),
         new NetworkFirst({
           cacheName: 'static-pages',
-          matchOptions: {
-            ignoreVary: true,
-            ignoreSearch: true,
-            ignoreMethod: true,
-          },
+          networkTimeoutSeconds: 3,
         }),
         'GET',
       )
@@ -41,12 +37,8 @@ export function setupRoutes() {
       registerRoute(
         ({ request, sameOrigin, url }) => request.destination === 'document' && sameOrigin && dynamicRoutesRegexp.test(url.pathname),
         new NetworkFirst({
-            cacheName: 'dynamic-pages',
-            matchOptions: {
-            ignoreVary: true,
-            ignoreSearch: true,
-            ignoreMethod: true,
-          },
+          cacheName: 'dynamic-pages',
+          networkTimeoutSeconds: 3,
         }),
         'GET',
       )

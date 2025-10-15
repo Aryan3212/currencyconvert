@@ -3,8 +3,9 @@
 
 import { navigateFallback, ssr } from 'virtual:vite-pwa/remix/sw'
 import { clientsClaim } from 'workbox-core'
-import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
-import { NavigationRoute, registerRoute } from 'workbox-routing'
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
+import { registerRoute } from 'workbox-routing'
+import { NetworkFirst } from 'workbox-strategies'
 import { setupRoutes } from './shared-sw'
 
 declare let self: ServiceWorkerGlobalScope
@@ -27,25 +28,35 @@ precacheAndRoute(manifest)
 // clean old assets
 cleanupOutdatedCaches()
 
-let allowlist: RegExp[] | undefined
-// in dev mode, we disable precaching to avoid caching issues
-if (import.meta.env.DEV) {
-  if (ssr) {
-    // add the navigateFallback to the manifest
-    allowlist = [new RegExp(`^${url}$`)]
-  }
-  else {
-    allowlist = [/^index.html$/]
-  }
-}
-
-// to allow work offline
-registerRoute(new NavigationRoute(
-  createHandlerBoundToURL(ssr ? url : 'index.html'),
-  { allowlist },
-))
+// Use NetworkFirst for navigation requests - always try network when online, fallback to cache when offline
+registerRoute(
+  ({ request }) => request.mode === 'navigate',
+  new NetworkFirst({
+    cacheName: 'pages',
+    networkTimeoutSeconds: 3,
+  })
+)
 
 setupRoutes()
 
-self.skipWaiting()
-clientsClaim()
+// Force immediate activation of new service worker
+self.addEventListener('install', (event) => {
+  self.skipWaiting()
+})
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      // Clear all caches except the current workbox caches
+      const cacheNames = await caches.keys()
+      const workboxCachePrefix = 'workbox-'
+      await Promise.all(
+        cacheNames
+          .filter((cacheName) => !cacheName.startsWith(workboxCachePrefix))
+          .map((cacheName) => caches.delete(cacheName))
+      )
+      // Take control of all clients immediately
+      await clientsClaim()
+    })()
+  )
+})

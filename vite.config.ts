@@ -24,7 +24,6 @@ export default defineConfig({
       ignoredRouteFiles: ["**/*.css"],
     }),
     RemixVitePWAPlugin({
-      // PWA options
       injectRegister: 'script',
     }),
     tsconfigPaths(),
