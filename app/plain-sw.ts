@@ -25,9 +25,6 @@ if (import.meta.env.DEV) {
 
 precacheAndRoute(manifest)
 
-// clean old assets
-cleanupOutdatedCaches()
-
 // Use NetworkFirst for navigation requests - always try network when online, fallback to cache when offline
 registerRoute(
   ({ request }) => request.mode === 'navigate',
@@ -47,6 +44,8 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {
+      // Clean up outdated precaches
+      await cleanupOutdatedCaches()
       // Clear all caches except the current workbox caches
       const cacheNames = await caches.keys()
       const workboxCachePrefix = 'workbox-'
