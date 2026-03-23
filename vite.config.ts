@@ -25,6 +25,30 @@ export default defineConfig({
     }),
     RemixVitePWAPlugin({
       injectRegister: 'script',
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.mode === "navigate",
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "pages",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.endsWith('.data'),
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "remix-data",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          }
+        ],
+      },
     }),
     tsconfigPaths(),
   ],

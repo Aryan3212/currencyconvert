@@ -1,5 +1,5 @@
 import { LoaderFunction } from "@remix-run/node";
-import { ClientLoaderFunctionArgs, useLoaderData, useNavigate, useRevalidator } from "@remix-run/react";
+import { useLoaderData, useNavigate, useRevalidator } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/node";
 import type { LinksFunction } from "@remix-run/node";
 import React, { useEffect } from "react";
@@ -76,35 +76,15 @@ export const loader: LoaderFunction = async ({ params }) => {
   return await fetchCurrencyData({ paramsPath: params.path });
 };
 
-export const clientLoader = async ({
-  serverLoader,
-}: ClientLoaderFunctionArgs) => {
-  try {
-    const serverData = (await serverLoader()) as CurrencyDataResult;
-    // Cache the fresh data in localStorage for future offline use
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('currencyData', JSON.stringify(serverData));
-    }
-    return serverData;
-  } catch {
-    if (typeof window !== 'undefined') {
-      const data = localStorage.getItem('currencyData');
-      if (data && typeof data === 'string') {
-        return JSON.parse(data);
-      }
-    }
-    throw new Error('No data available, please connect to the internet');
-  }
-};
-
 export default function Index() {
   const data = useLoaderData<CurrencyDataResult>();
   const navigate = useNavigate();
   const revalidator = useRevalidator();
 
-  // Revalidate on mount to ensure we get fresh data if the SW served a stale page
+  // Revalidate on mount to ensure we get fresh data if the SW served a stale page,
+  // but only if online to prevent unnecessary error boundaries when fully offline.
   useEffect(() => {
-    if (revalidator.state === "idle") {
+    if (typeof window !== "undefined" && navigator.onLine && revalidator.state === "idle") {
       revalidator.revalidate();
     }
   }, []);
