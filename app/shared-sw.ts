@@ -1,6 +1,6 @@
 import { dynamicRoutes, staticRoutes } from 'virtual:vite-pwa/remix/sw'
 import { registerRoute } from 'workbox-routing'
-import { NetworkFirst } from 'workbox-strategies'
+import { StaleWhileRevalidate } from 'workbox-strategies'
 
 export function setupRoutes() {
   // disable precaching in dev
@@ -18,9 +18,8 @@ export function setupRoutes() {
       const staticRoutesRegexp = new RegExp(`^${baseUrl}(${useStaticRoutes.join('|')})$`)
       registerRoute(
         ({ request, sameOrigin, url }) => request.destination === 'document' && sameOrigin && staticRoutesRegexp.test(url.pathname),
-        new NetworkFirst({
+        new StaleWhileRevalidate({
           cacheName: 'static-pages',
-          networkTimeoutSeconds: 3,
         }),
         'GET',
       )
@@ -36,9 +35,8 @@ export function setupRoutes() {
       }).join('|')})$`)
       registerRoute(
         ({ request, sameOrigin, url }) => request.destination === 'document' && sameOrigin && dynamicRoutesRegexp.test(url.pathname),
-        new NetworkFirst({
+        new StaleWhileRevalidate({
           cacheName: 'dynamic-pages',
-          networkTimeoutSeconds: 3,
         }),
         'GET',
       )

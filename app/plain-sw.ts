@@ -5,7 +5,7 @@ import { navigateFallback, ssr } from 'virtual:vite-pwa/remix/sw'
 import { clientsClaim } from 'workbox-core'
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
-import { NetworkFirst } from 'workbox-strategies'
+import { StaleWhileRevalidate } from 'workbox-strategies'
 import { setupRoutes } from './shared-sw'
 
 declare let self: ServiceWorkerGlobalScope
@@ -25,12 +25,11 @@ if (import.meta.env.DEV) {
 
 precacheAndRoute(manifest)
 
-// Use NetworkFirst for navigation requests - always try network when online, fallback to cache when offline
+// Use StaleWhileRevalidate for navigation requests - show cached content immediately, update in background
 registerRoute(
   ({ request }) => request.mode === 'navigate',
-  new NetworkFirst({
+  new StaleWhileRevalidate({
     cacheName: 'pages',
-    networkTimeoutSeconds: 3,
   })
 )
 
