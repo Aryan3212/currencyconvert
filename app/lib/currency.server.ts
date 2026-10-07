@@ -22,181 +22,184 @@ const redis = new Redis({
 function fallbackApiResponse(): FixerResponse {
   return {
     success: true,
-    timestamp: 1729313584,
+    timestamp: 1791355445,
     base: "EUR",
-    date: new Date(1729313584 * 1000),
+    date: new Date(1791355445 * 1000),
     rates: {
-      AED: 3.994155,
-      AFN: 71.230643,
-      ALL: 98.851221,
-      AMD: 421.105563,
-      ANG: 1.959969,
-      AOA: 992.279154,
-      ARS: 1065.594393,
-      AUD: 1.620861,
-      AWG: 1.957364,
-      AZN: 1.852939,
-      BAM: 1.961273,
-      BBD: 2.195827,
-      BDT: 129.962662,
-      BGN: 1.956843,
-      BHD: 0.409928,
-      BIF: 3145.375267,
-      BMD: 1.087424,
-      BND: 1.427283,
-      BOB: 7.514971,
-      BRL: 6.190495,
-      BSD: 1.087535,
-      BTC: 1.5903624e-5,
-      BTN: 91.425122,
-      BWP: 14.500464,
-      BYN: 3.559032,
-      BYR: 21313.519528,
-      BZD: 2.192117,
-      CAD: 1.502006,
-      CDF: 3094.810423,
-      CHF: 0.940446,
-      CLF: 0.037575,
-      CLP: 1036.816161,
-      CNY: 7.722676,
-      CNH: 7.740249,
-      COP: 4640.583907,
-      CRC: 558.959781,
-      CUC: 1.087424,
-      CUP: 28.816748,
-      CVE: 110.781411,
-      CZK: 25.239453,
-      DJF: 193.257504,
-      DKK: 7.463434,
-      DOP: 65.735236,
-      DZD: 145.212532,
-      EGP: 52.837041,
-      ERN: 16.311367,
-      ETB: 128.864011,
+      AED: 4.12261,
+      AFN: 71.843731,
+      ALL: 91.769073,
+      AMD: 406.175493,
+      ANG: 2.009795,
+      AOA: 1029.388586,
+      ARS: 1707.002157,
+      AUD: 1.610434,
+      AWG: 2.023417,
+      AZN: 1.902848,
+      BAM: 1.951838,
+      BBD: 2.259843,
+      BDT: 137.890093,
+      BGN: 1.889766,
+      BHD: 0.423047,
+      BIF: 3372.229722,
+      BMD: 1.122561,
+      BND: 1.43462,
+      BOB: 13.491613,
+      BRL: 5.59305,
+      BSD: 1.121997,
+      BTC: 1.3309596e-5,
+      BTN: 108.126511,
+      BWP: 15.4346,
+      BYN: 3.446857,
+      BYR: 22002.201142,
+      BZD: 2.256489,
+      CAD: 1.596422,
+      CDF: 2601.537436,
+      CHF: 0.934864,
+      CLF: 0.027688,
+      CLP: 1093.265609,
+      CNY: 7.526327,
+      CNH: 7.528603,
+      COP: 3639.040587,
+      CRC: 513.664163,
+      CUC: 1.122561,
+      CUP: 26.927739,
+      CVE: 110.041624,
+      CZK: 24.411498,
+      DJF: 199.807076,
+      DKK: 7.475091,
+      DOP: 67.653572,
+      DZD: 151.107579,
+      EGP: 58.756427,
+      ERN: 16.838419,
+      ETB: 180.732877,
       EUR: 1,
-      FJD: 2.423547,
-      FKP: 0.832063,
-      GBP: 0.833212,
-      GEL: 2.958219,
-      GGP: 0.832063,
-      GHS: 17.480392,
-      GIP: 0.832063,
-      GMD: 76.120099,
-      GNF: 9384.473525,
-      GTQ: 8.408464,
-      GYD: 227.522812,
-      HKD: 8.450213,
-      HNL: 27.298528,
-      HRK: 7.4913,
-      HTG: 143.119376,
-      HUF: 400.357487,
-      IDR: 16827.186781,
-      ILS: 4.041751,
-      IMP: 0.832063,
-      INR: 91.419177,
-      IQD: 1424.52605,
-      IRR: 45769.696145,
-      ISK: 149.401667,
-      JEP: 0.832063,
-      JMD: 172.762094,
-      JOD: 0.770771,
-      JPY: 162.624747,
-      KES: 140.278138,
-      KGS: 92.978923,
-      KHR: 4417.118561,
-      KMF: 492.766814,
-      KPW: 978.681774,
-      KRW: 1489.782809,
-      KWD: 0.333318,
-      KYD: 0.906329,
-      KZT: 525.376066,
-      LAK: 23855.378326,
-      LBP: 97433.232507,
-      LKR: 318.428577,
-      LRD: 209.084582,
-      LSL: 19.14277,
-      LTL: 3.210882,
-      LVL: 0.657773,
-      LYD: 5.235991,
-      MAD: 10.803605,
-      MDL: 19.374063,
-      MGA: 4996.715797,
-      MKD: 61.512242,
-      MMK: 3531.912247,
-      MNT: 3695.068365,
-      MOP: 8.703186,
-      MRU: 43.247283,
-      MUR: 50.500404,
-      MVR: 16.692377,
-      MWK: 1887.769248,
-      MXN: 21.62239,
-      MYR: 4.680823,
-      MZN: 69.490479,
-      NAD: 19.236949,
-      NGN: 1777.939375,
-      NIO: 39.995881,
-      NOK: 11.880225,
-      NPR: 146.280196,
-      NZD: 1.79236,
-      OMR: 0.418634,
-      PAB: 1.087535,
-      PEN: 4.097963,
-      PGK: 4.290438,
-      PHP: 62.549063,
-      PKR: 301.92381,
-      PLN: 4.307631,
-      PYG: 8610.02634,
-      QAR: 3.958773,
-      RON: 4.978995,
-      RSD: 116.991736,
-      RUB: 103.490736,
-      RWF: 1469.110453,
-      SAR: 4.084447,
-      SBD: 9.0625,
-      SCR: 15.327648,
-      SDG: 654.089813,
-      SEK: 11.440834,
-      SGD: 1.424639,
-      SHP: 0.832063,
-      SLE: 25.000292,
-      SLL: 22802.743856,
-      SOS: 620.919738,
-      SRD: 35.763257,
-      STD: 22507.490939,
-      SVC: 9.515553,
-      SYP: 2732.186884,
-      SZL: 19.142641,
-      THB: 36.04925,
-      TJS: 11.598459,
-      TMT: 3.81686,
-      TND: 3.364822,
-      TOP: 2.546861,
-      TRY: 37.109234,
-      TTD: 7.379593,
-      TWD: 34.859607,
-      TZS: 2957.794911,
-      UAH: 44.839926,
-      UGX: 3989.1317,
-      USD: 1.087424,
-      UYU: 45.567155,
-      UZS: 13951.656258,
-      VEF: 3939252.254264,
-      VES: 42.541279,
-      VND: 27365.03668,
-      VUV: 129.10125,
-      WST: 3.046076,
-      XAF: 657.792575,
-      XAG: 0.032237,
-      XAU: 0.0004,
-      XCD: 2.938819,
-      XDR: 0.812668,
-      XOF: 656.264575,
+      FJD: 2.52436,
+      FKP: 0.849344,
+      GBP: 0.847337,
+      GEL: 2.890643,
+      GGP: 0.849344,
+      GHS: 13.206192,
+      GIP: 0.849344,
+      GMD: 83.0698,
+      GNF: 9871.094301,
+      GTQ: 8.569604,
+      GYD: 234.743488,
+      HKD: 8.809715,
+      HNL: 30.146374,
+      HRK: 7.534293,
+      HTG: 146.925025,
+      HUF: 366.219344,
+      IDR: 20083.74391,
+      ILS: 3.423255,
+      IMP: 0.849344,
+      INR: 108.559759,
+      IQD: 1470.55528,
+      IRR: 1944444.525385,
+      ISK: 137.199825,
+      JEP: 0.849344,
+      JMD: 178.300446,
+      JOD: 0.79592,
+      JPY: 177.688005,
+      KES: 145.831728,
+      KGS: 98.168077,
+      KHR: 4544.875452,
+      KMF: 491.681995,
+      KPW: 1010.305511,
+      KRW: 1504.321642,
+      KWD: 0.348286,
+      KYD: 0.935002,
+      KZT: 506.372102,
+      LAK: 25161.14885,
+      LBP: 100604.43372,
+      LKR: 370.928781,
+      LRD: 191.860537,
+      LSL: 18.583642,
+      LTL: 3.314631,
+      LVL: 0.679026,
+      LYD: 7.212456,
+      MAD: 11.189087,
+      MDL: 20.022534,
+      MGA: 4969.889352,
+      MKD: 61.45026,
+      MMK: 2356.332635,
+      MNT: 4038.619867,
+      MOP: 9.069829,
+      MRU: 44.925405,
+      MUR: 53.187155,
+      MVR: 17.298315,
+      MWK: 1945.542026,
+      MXN: 20.24711,
+      MYR: 4.587125,
+      MZN: 71.731134,
+      NAD: 18.600425,
+      NGN: 1488.831081,
+      NIO: 41.164517,
+      NOK: 10.738006,
+      NPR: 173.005124,
+      NZD: 2.00209,
+      OMR: 0.431632,
+      PAB: 1.122022,
+      PEN: 3.86364,
+      PGK: 4.995026,
+      PHP: 70.444095,
+      PKR: 310.758363,
+      PLN: 4.377416,
+      PYG: 6573.743622,
+      QAR: 4.089942,
+      RON: 5.347997,
+      RSD: 117.478254,
+      RUB: 96.53859,
+      RWF: 1655.777892,
+      SAR: 4.208999,
+      SBD: 9.053502,
+      SCR: 15.644537,
+      SDG: 675.195548,
+      SEK: 11.264006,
+      SGD: 1.435902,
+      SHP: 0.846928,
+      SLE: 27.704223,
+      SLL: 23539.539704,
+      SOS: 641.54852,
+      SRD: 42.264756,
+      STD: 23234.752111,
+      STN: 24.864732,
+      SVC: 9.817116,
+      SYP: 14595.542084,
+      SZL: 18.601003,
+      THB: 37.807683,
+      TJS: 10.344801,
+      TMT: 3.928964,
+      TND: 3.364372,
+      TOP: 2.702858,
+      TRY: 55.227207,
+      TTD: 7.605392,
+      TWD: 35.777712,
+      TZS: 2968.858014,
+      UAH: 50.398371,
+      UGX: 4526.810905,
+      USD: 1.122561,
+      UYU: 45.27829,
+      UZS: 13240.610345,
+      VES: 979.743031,
+      VND: 29167.50981,
+      VUV: 135.016826,
+      WST: 3.124199,
+      XAF: 655.957,
+      XAG: 0.018547,
+      XAU: 0.000271551164,
+      XCD: 3.033778,
+      XCG: 2.022104,
+      XDR: 0.793709,
+      XOF: 655.957,
       XPF: 119.331742,
-      YER: 272.23711,
-      ZAR: 19.136888,
-      ZMK: 9788.129001,
-      ZMW: 28.90165,
-      ZWL: 350.150234,
+      YER: 265.177056,
+      ZAR: 18.632093,
+      ZMK: 10104.402492,
+      ZMW: 22.187664,
+      ZWL: 361.464275,
+      SSP: 6422.049474,
+      MXV: 2.288416,
     },
   };
 }
@@ -249,60 +252,80 @@ export type CurrencyDataResult = {
 };
 
 export async function fetchCurrencyData({ paramsPath }: { paramsPath?: string }): Promise<CurrencyDataResult> {
-  const cacheResponse = (await redis.get("currency_response")) as {
-    currencyMap: Currency;
-    timestamp: number;
-  } | null;
+  type CachedRates = { currencyMap: Currency; timestamp: number };
+  let data: CachedRates | null = null;
 
-  const fallbackCache = (await redis.get("currency_response_fallback")) as {
-    currencyMap: Currency;
-    timestamp: number;
-  } | null;
+  try {
+    data = await redis.get<CachedRates>("currency_response");
+  } catch {
+    console.warn("Unable to read temporary currency cache");
+  }
 
-  let currencyMap;
-  let timestamp;
-  
-  if (cacheResponse) {
-    currencyMap = cacheResponse.currencyMap;
-    timestamp = cacheResponse.timestamp;
-  } else {
+  if (!data) {
     try {
-      const response = await fetch(
-        `https://data.fixer.io/api/latest?access_key=${process.env.FIXER_API_KEY}&format=1`
-      );
-
-      let currencyList: FixerResponse = await response.json();
-
-      if (currencyList.success === false) {
-        throw new Error("Fixer API returned unsuccessful response");
+      if (!process.env.FIXER_API_KEY) {
+        throw new Error("FIXER_API_KEY is not configured");
       }
-      
-      currencyMap = parseCurrencies(currencyList);
-      timestamp = currencyList.timestamp;
-      
-      await redis.set(
-        "currency_response",
-        JSON.stringify({ currencyMap, timestamp }),
-        {
-          ex: 50000, // Keep _index.tsx cache expiration for now
-        }
-      );
 
-      await redis.set(
-        "currency_response_fallback",
-        JSON.stringify({ currencyMap, timestamp })
+      const response = await fetch(
+        `https://data.fixer.io/api/latest?access_key=${encodeURIComponent(process.env.FIXER_API_KEY)}&format=1`,
+        { signal: AbortSignal.timeout(10000) }
       );
+      if (!response.ok) {
+        throw new Error(`Fixer HTTP status ${response.status}`);
+      }
+
+      const currencyList: FixerResponse & { error?: { code?: number } } = await response.json();
+      if (
+        currencyList.success !== true ||
+        !Number.isFinite(currencyList.timestamp) ||
+        !currencyList.rates ||
+        typeof currencyList.rates !== "object" ||
+        Array.isArray(currencyList.rates) ||
+        Object.keys(currencyList.rates).length === 0 ||
+        Object.values(currencyList.rates).some((rate) => !Number.isFinite(rate) || rate <= 0)
+      ) {
+        throw new Error(`Invalid Fixer response (code: ${currencyList.error?.code ?? "unknown"})`);
+      }
+
+      data = {
+        currencyMap: parseCurrencies(currencyList),
+        timestamp: currencyList.timestamp,
+      };
     } catch (error) {
-      if (fallbackCache) {
-        currencyMap = fallbackCache.currencyMap;
-        timestamp = fallbackCache.timestamp;
-      } else {
+      // Log only our own error messages; network errors can contain the API URL/key.
+      console.warn("Unable to fetch Fixer rates", error instanceof Error &&
+        /^(FIXER_API_KEY|Fixer HTTP status|Invalid Fixer response)/.test(error.message)
+        ? error.message : "Request failed");
+    }
+
+    if (data) {
+      const cachedData = JSON.stringify(data);
+      const writes = await Promise.allSettled([
+        redis.set("currency_response", cachedData, { ex: 50000 }),
+        redis.set("currency_response_fallback", cachedData),
+      ]);
+      if (writes.some((result) => result.status === "rejected")) {
+        console.warn("Unable to update one or more currency caches");
+      }
+    } else {
+      try {
+        data = await redis.get<CachedRates>("currency_response_fallback");
+      } catch {
+        console.warn("Unable to read permanent currency cache");
+      }
+
+      if (!data) {
         const fallbackData = fallbackApiResponse();
-        currencyMap = parseCurrencies(fallbackData);
-        timestamp = fallbackData.timestamp;
+        data = {
+          currencyMap: parseCurrencies(fallbackData),
+          timestamp: fallbackData.timestamp,
+        };
       }
     }
   }
+
+  const { currencyMap, timestamp } = data;
 
   const validatedCurrencies = validateCurrencyParams(paramsPath, currencyMap);
 
