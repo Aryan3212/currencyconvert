@@ -42,16 +42,38 @@
   ],
   "screenshots": [
     {
-      "src": "/currency-converter-pro-1200x630.png",
-      "sizes": "1200x630",
+      "src": "/screenshots/desktop-converter.png",
+      "sizes": "2454x1206",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Currency Converter Pro - Desktop view"
     },
     {
-      "src": "/currency-converter-pro-1200x630.png",
-      "sizes": "1200x630",
+      "src": "/screenshots/desktop-currency-picker.png",
+      "sizes": "2454x1206",
       "type": "image/png",
+      "form_factor": "wide",
+      "label": "Currency Converter Pro - Desktop view"
+    },
+    {
+      "src": "/screenshots/mobile-converter.png",
+      "sizes": "874x1086",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Currency Converter Pro - Mobile view"
+    },
+    {
+      "src": "/screenshots/mobile-saved-conversions.png",
+      "sizes": "874x1086",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Currency Converter Pro - Mobile view"
+    },
+    {
+      "src": "/screenshots/mobile-currency-picker.png",
+      "sizes": "874x1086",
+      "type": "image/png",
+      "form_factor": "narrow",
       "label": "Currency Converter Pro - Mobile view"
     }
   ]
