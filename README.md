@@ -1,6 +1,4 @@
-# An offline first multiple currency converter. 
-## Compare across multiple currencies, keep calculations saved in your browser.
-## An overview of the technical details can be found here: https://aryanrahman.dev/post/portfolio/currency-converter/
+An overview of the technical details can be found here: https://aryanrahman.dev/post/portfolio/currency-converter/
 
 [Watch the video overview](https://res.cloudinary.com/dwz8ueclf/video/upload/v1793173381/untitled_h13rl7.mp4)
 
